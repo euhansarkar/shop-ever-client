@@ -1,7 +1,22 @@
+import ActionBar from "@/components/ui/ActionBar";
+import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
+
 const CustomerPage = () => {
   return (
     <div>
-      <h1>this is customer page</h1>
+      <SEBreadCrumb
+        items={[
+          {
+            label: `admin`,
+            link: `/admin`,
+          },
+          {
+            label: "customer",
+            link: `/admin/customer`,
+          },
+        ]}
+      />
+      <ActionBar title="customer list"></ActionBar>
     </div>
   );
 };

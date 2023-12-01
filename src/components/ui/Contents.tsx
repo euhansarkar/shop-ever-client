@@ -1,12 +1,10 @@
 "use client";
 import { Layout } from "antd";
-import SEBreadCrumb from "./SEBreadCrumb";
 import SEHeader from "./SEHeader";
 
 const { Content } = Layout;
 
 const Contents = ({ children }: { children: React.ReactNode }) => {
-  const base = "admin";
   return (
     <Content
       style={{
@@ -15,19 +13,7 @@ const Contents = ({ children }: { children: React.ReactNode }) => {
       }}
     >
       <SEHeader />
-      <SEBreadCrumb
-        items={[
-          {
-            label: `${base}`,
-            link: `/${base}`,
-          },
-          {
-            label: "student",
-            link: `/${base}/student`,
-          },
-        ]}
-      />
-      {children}
+      <div style={{ padding: "10px" }}>{children}</div>
     </Content>
   );
 };

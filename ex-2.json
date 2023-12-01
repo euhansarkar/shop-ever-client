@@ -1,0 +1,18 @@
+[
+  {
+    "attribute_code": "size-2222",
+    "attribute_group_id": "3ecebb5d-9a52-42b7-8973-09fe90dc3ba9",
+    "attribute_name": "color",
+    "display_on_frontend": true,
+    "is_filterable": true,
+    "is_required": true,
+    "sort_order": 3,
+    "type": "select",
+    "attribute_options": [
+      { "option_text": "my " },
+      { "option_text": "name " },
+      { "option_text": "is" },
+      { "option_text": "euhan" }
+    ]
+  }
+]

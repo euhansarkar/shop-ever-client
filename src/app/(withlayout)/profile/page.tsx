@@ -1,7 +1,9 @@
+import ActionBar from "@/components/ui/ActionBar";
+
 const ProfilePage = () => {
   return (
     <div>
-      <h1>this is profile page</h1>
+      <ActionBar title="profile page"/>
     </div>
   );
 };

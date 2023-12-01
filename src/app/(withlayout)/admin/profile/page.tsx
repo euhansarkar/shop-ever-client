@@ -1,8 +1,23 @@
+import ActionBar from "@/components/ui/ActionBar";
+import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
+
 const ProfilePage = () => {
   return (
-    <div>
-      <h1>this is profile page</h1>
-    </div>
+    <>
+      <SEBreadCrumb
+        items={[
+          {
+            label: `admin`,
+            link: `/admin`,
+          },
+          {
+            label: "profile",
+            link: `/admin/profile`,
+          },
+        ]}
+      />
+      <ActionBar title="profile page"/>
+    </>
   );
 };
 
