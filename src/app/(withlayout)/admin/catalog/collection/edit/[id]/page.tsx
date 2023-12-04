@@ -15,21 +15,8 @@ import {
 } from "@/redux/api/attributeApi";
 import { useAttributeGroupsQuery } from "@/redux/api/attributeGroupApi";
 import { Button, Col, Row, message } from "antd";
-import { useState } from "react";
 
 const AttributeEditionPage = ({ params }: any) => {
-  const [selectedAttributeType, setSelectedAttributeType] = useState<
-    string | undefined
-  >(undefined);
-  const [isRequiredType, setIsRequiredType] = useState<string | undefined>(
-    undefined
-  );
-  const [isFilterableType, setIsFilterableType] = useState<string | undefined>(
-    undefined
-  );
-  const [isDisplayType, setIsDiaplayType] = useState<string | undefined>(
-    undefined
-  );
   const { data: attributeData, isLoading: loading } = useAttributeQuery(
     params?.id
   );
@@ -151,18 +138,11 @@ const AttributeEditionPage = ({ params }: any) => {
                       name="type"
                       options={myOptions}
                       label="Attribute Type"
-                      onValueChange={(value) => setSelectedAttributeType(value)}
                     />
                   </div>
 
                   <div style={{ margin: "10px 0px" }}>
-                    <FormDynamicInputField
-                      name="attribute_options"
-                      subName="option_text"
-                      label="Attribute Options"
-                      placeholder="attribute option"
-                      size="middle"
-                    />
+                    <FormDynamicInputField />
                   </div>
                 </div>
               </div>
@@ -216,7 +196,6 @@ const AttributeEditionPage = ({ params }: any) => {
                     name="is_required"
                     options={filterableOptions}
                     label="Is Required?"
-                    onValueChange={(value) => setIsRequiredType(value)}
                   />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
@@ -225,7 +204,6 @@ const AttributeEditionPage = ({ params }: any) => {
                     name="is_filterable"
                     options={filterableOptions}
                     label="Is Filterable?"
-                    onValueChange={(value) => setIsFilterableType(value)}
                   />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
@@ -234,7 +212,6 @@ const AttributeEditionPage = ({ params }: any) => {
                     name="display_on_frontend"
                     options={filterableOptions}
                     label="Show to customers?"
-                    onValueChange={(value) => setIsDiaplayType(value)}
                   />
                 </div>
                 <div style={{ margin: "10px 0px" }}>

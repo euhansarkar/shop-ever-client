@@ -38,6 +38,7 @@ export const categoryApi = baseApi.injectEndpoints({
                 url: BASE_CATEGORY_API_URL,
                 method: crudTypes.POST,
                 data,
+                contentType: "multipart/form-data"
             }),
             invalidatesTags: [tagTypes.category],
         }),

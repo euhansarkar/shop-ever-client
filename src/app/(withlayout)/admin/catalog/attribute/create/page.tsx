@@ -16,12 +16,25 @@ import { useState } from "react";
 
 const AttributeCreationPage = () => {
   const [addAttribute] = useAddAttributeMutation();
+  const [selectedAttributeType, setSelectedAttributeType] = useState<
+    string | undefined
+  >(undefined);
+  const [isRequiredType, setIsRequiredType] = useState<string | undefined>(
+    undefined
+  );
+  const [isFilterableType, setIsFilterableType] = useState<string | undefined>(
+    undefined
+  );
+  const [isDisplayType, setIsDiaplayType] = useState<string | undefined>(
+    undefined
+  );
   const { data, isLoading } = useAttributeGroupsQuery({ page: 1, limit: 100 });
   const attributeGroups = data?.attributeGroups;
   const attributeGroupOptions = attributeGroups?.map((group) => ({
     label: group?.group_name,
     value: group?.id,
   }));
+
 
   const myOptions = [
     {
@@ -48,12 +61,11 @@ const AttributeCreationPage = () => {
       const res = await addAttribute(data).unwrap();
       console.log(res);
 
-      if(res?.id){
+      if (res?.id) {
         message.success(`attribute created successfully`);
       }
-      
     } catch (error: any) {
-        console.error(error.message);
+      console.error(error.message);
     }
   };
 
@@ -122,11 +134,21 @@ const AttributeCreationPage = () => {
                       name="type"
                       options={myOptions}
                       label="Attribute Type"
+                      onValueChange={(value) => setSelectedAttributeType(value)}
                     />
                   </div>
 
-                  <div style={{ margin: "10px 0px" }}>
-                    <FormDynamicInputField />
+                  <div
+                    style={{
+                      margin: "10px 0px",
+                      display:
+                        selectedAttributeType === "select" ||
+                        selectedAttributeType === "multi-select"
+                          ? "block"
+                          : "none",
+                    }}
+                  >
+                    <FormDynamicInputField name="attribute_options" subName="option_text" label="Attribute Options" placeholder="attribute option" size="middle" />
                   </div>
                 </div>
               </div>
@@ -180,6 +202,7 @@ const AttributeCreationPage = () => {
                     name="is_required"
                     options={filterableOptions}
                     label="Is Required?"
+                    onValueChange={(value) => setIsRequiredType(value)}
                   />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
@@ -188,6 +211,7 @@ const AttributeCreationPage = () => {
                     name="is_filterable"
                     options={filterableOptions}
                     label="Is Filterable?"
+                    onValueChange={(value) => setIsFilterableType(value)}
                   />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
@@ -196,6 +220,7 @@ const AttributeCreationPage = () => {
                     name="display_on_frontend"
                     options={filterableOptions}
                     label="Show to customers?"
+                    onValueChange={(value) => setIsDiaplayType(value)}
                   />
                 </div>
                 <div style={{ margin: "10px 0px" }}>

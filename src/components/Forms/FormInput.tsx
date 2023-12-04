@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "antd";
-import { CSSProperties } from "react";
+import { CSSProperties, ReactElement, ReactNode } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 interface IInput {
   name: string;
@@ -14,6 +14,9 @@ interface IInput {
   label?: string;
   required?: boolean;
   styles?: CSSProperties;
+  addonBefore?: ReactNode | ReactElement;
+  addonAfter?: ReactNode | ReactElement;
+  defaultValue?: string;
 }
 
 const FormInput = ({
@@ -26,7 +29,10 @@ const FormInput = ({
   validation,
   label,
   required,
-  styles
+  styles,
+  addonBefore,
+  addonAfter,
+  defaultValue,
 }: IInput) => {
   const { control } = useFormContext();
 
@@ -61,6 +67,9 @@ const FormInput = ({
               size={size}
               placeholder={placeholder}
               style={styles}
+              addonBefore={addonBefore}
+              addonAfter={addonAfter}
+              defaultValue={defaultValue}
               {...field}
               value={value ? value : field.value}
             />

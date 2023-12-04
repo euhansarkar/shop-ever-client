@@ -1,5 +1,5 @@
 import { Divider, Radio, RadioChangeEvent, Space } from "antd";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 
 export type RadioOptions = {
@@ -13,7 +13,7 @@ type RadioFieldProps = {
   options: RadioOptions[];
   size?: "large" | "middle" | "small";
   label?: string;
-  handleChange?: (el: RadioChangeEvent) => void;
+  onValueChange: (value: string | undefined) => void; // New callback function
 };
 
 const FormRadioField = ({
@@ -21,7 +21,7 @@ const FormRadioField = ({
   size,
   options,
   label,
-  handleChange,
+  onValueChange,
 }: RadioFieldProps) => {
   const { control } = useFormContext();
 
@@ -31,12 +31,17 @@ const FormRadioField = ({
       <Controller
         control={control}
         name={name}
-        render={({ field: { value, onChange } }) => (
+        render={({ field: {value,onChange} }) => (
           <Radio.Group
-            onChange={handleChange ? handleChange : onChange}
+            // onChange={handleChange ? handleChange : onChange}
+            // value={value}
             size={size}
             style={{ width: "100%" }}
             value={value}
+            onChange={(e: RadioChangeEvent) => {
+              onChange(e);
+              onValueChange(e.target.value);
+            }}
           >
             <Space direction="vertical">
               {options.map((option, i) => (
@@ -53,7 +58,7 @@ const FormRadioField = ({
           </Radio.Group>
         )}
       />
-        <Divider style={{width: "100%"}} orientationMargin={3} />
+      <Divider style={{ width: "100%" }} orientationMargin={3} />
     </>
   );
 };

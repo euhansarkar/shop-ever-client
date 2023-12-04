@@ -1,6 +1,5 @@
 import { Button, Empty, Switch } from "antd";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import FormInput from "../Forms/FormInput";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 type DynamicInputProps = {
@@ -9,6 +8,7 @@ type DynamicInputProps = {
   size: "small" | "middle" | "large";
   placeholder: string;
   label: string;
+  id: string;
 };
 
 const FormDynamicFields = ({
@@ -17,6 +17,7 @@ const FormDynamicFields = ({
   size,
   placeholder,
   label,
+  id,
 }: DynamicInputProps) => {
   const { control, setValue, getValues } = useFormContext();
   const { fields, append, remove } = useFieldArray({
@@ -24,6 +25,8 @@ const FormDynamicFields = ({
     name: name,
     keyName: "customId",
   });
+
+  console.log(`this is id from attSelection`,id);
 
   const handleSwitchToggle = (index: number, isChecked: boolean) => {
     const currentOptions = getValues(name);
@@ -56,13 +59,6 @@ const FormDynamicFields = ({
                   alignItems: "center",
                 }}
               >
-                <FormInput
-                  type="text"
-                  name={`${name}.${index}.${subName}`}
-                  size={size}
-                  placeholder={`${placeholder}: ${index}`}
-                />
-
                 <Button
                   type="primary"
                   onClick={() => remove(index)}

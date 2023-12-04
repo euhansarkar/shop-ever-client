@@ -4,55 +4,42 @@ import FormInput from "@/components/Forms/FormInput";
 import FormInputNumber from "@/components/Forms/FormInputNumber";
 import FormRadioField from "@/components/Forms/FormRadioField";
 import FormSelectField from "@/components/Forms/FormSelectField";
-import AttributeGroupPage from "@/components/attributeGroup/AttributeGroup";
+import RichTextEditor from "@/components/editor/RichTextEditor";
 import ActionBar from "@/components/ui/ActionBar";
-import FormDynamicInputField from "@/components/ui/FormDynamicInputField";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
-import { filterableOptions } from "@/constants/global";
-import { useAddAttributeMutation } from "@/redux/api/attributeApi";
-import { useAttributeGroupsQuery } from "@/redux/api/attributeGroupApi";
+import SEUpload from "@/components/ui/SEUpload";
+import { filterableOptions, myOptions } from "@/constants/global";
+import { useAddCategoryMutation } from "@/redux/api/categoryApi";
 import { Button, Col, Row, Space, message } from "antd";
+import { useState } from "react";
+import FormDynamicInputField from "@/components/ui/FormDynamicInputField";
 
-const AttributeCreationPage = () => {
-  const [addAttribute] = useAddAttributeMutation();
-  const { data, isLoading } = useAttributeGroupsQuery({ page: 1, limit: 100 });
-  const attributeGroups = data?.attributeGroups;
-  const attributeGroupOptions = attributeGroups?.map((group) => ({
-    label: group?.group_name,
-    value: group?.id,
-  }));
+const CategoryCreationPage = () => {
+  const [isRequired, setIsRequired] = useState<string | undefined>(undefined);
+  const [isFilterable, setIsFilterable] = useState<string | undefined>(
+    undefined
+  );
+  const [addCategory] = useAddCategoryMutation();
 
-  const myOptions = [
-    {
-      label: "Text",
-      value: "text",
-    },
-    {
-      label: "Select",
-      value: "select",
-    },
-    {
-      label: "MultiSelect",
-      value: "multi-select",
-    },
-    {
-      label: "TextArea",
-      value: "textarea",
-    },
-  ];
+  const handleOnSubmit = async (values: any) => {
+    const obj = { ...values };
+    const file = obj["file"];
+    delete obj["file"];
+    console.log(`after deleting from object`, file);
+    const data = JSON.stringify(obj);
+    const formData = new FormData();
+    formData.append("file", file as Blob);
+    formData.append("data", data);
+    console.log(`form data`, formData);
+    message.loading("Creating...");
 
-  const handleOnSubmit = async (data: any) => {
     try {
-      console.log(data);
-      const res = await addAttribute(data).unwrap();
-      console.log(res);
-
-      if(res?.id){
-        message.success(`attribute created successfully`);
+      const res = await addCategory(formData).unwrap();
+      if (res?.id) {
+        message.success(`category created successfully`);
       }
-      
     } catch (error: any) {
-        console.error(error.message);
+      console.error(error.message);
     }
   };
 
@@ -65,18 +52,17 @@ const AttributeCreationPage = () => {
             link: `/admin`,
           },
           {
-            label: "attribute",
-            link: `/admin/catalog/attribute`,
+            label: "category",
+            link: `/admin/catalog/category`,
           },
           {
             label: "create",
-            link: `/admin/catalog/attribute/create`,
+            link: `/admin/catalog/category/create`,
           },
         ]}
       />
-      <ActionBar title="attribute creation" />
+      <ActionBar title="category creation" />
 
-      <AttributeGroupPage />
       <Form submitHandler={handleOnSubmit}>
         <Row gutter={{ xs: 24, xl: 8, lg: 8, md: 24 }}>
           <Col span={16} style={{ margin: "10px 0" }}>
@@ -102,33 +88,42 @@ const AttributeCreationPage = () => {
                   <div style={{ margin: "10px 0px" }}>
                     <FormInput
                       type="text"
-                      name="attribute_name"
+                      name="name"
                       size="large"
-                      label="Attribute Name"
+                      label="Category Name"
                     />
                   </div>
-                  <div style={{ margin: "10px 0px" }}>
-                    <FormInput
-                      type="text"
-                      name="attribute_code"
+                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
+                    <FormSelectField
                       size="large"
-                      label="Attribute Code"
-                    />
-                  </div>
-                  <div style={{ margin: "10px 0px" }}>
-                    <FormRadioField
-                      size="large"
-                      name="type"
+                      name="parent_id"
                       options={myOptions}
-                      label="Attribute Type"
+                      label="Parent Id"
+                      placeholder="Select"
                     />
                   </div>
-
-                  <div style={{ margin: "10px 0px" }}>
-                    <FormDynamicInputField />
+                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
+                    <RichTextEditor
+                      styles={{
+                        backgroundColor: "white",
+                        borderRadius: "10px",
+                      }}
+                      label="Description"
+                      name="description"
+                    />
                   </div>
                 </div>
               </div>
+            </div>
+            <div
+              style={{
+                border: "1px solid #d9d9d9",
+                borderRadius: "5px",
+                padding: "15px",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
               <div>
                 <p
                   style={{
@@ -136,16 +131,48 @@ const AttributeCreationPage = () => {
                     marginBottom: "10px",
                   }}
                 >
-                  Attribute Group
+                  Search Engine Optimize
                 </p>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
-                    <FormSelectField
+                <div>
+                  <div style={{ margin: "10px 0px" }}>
+                    <FormInput
+                      type="text"
+                      name="metaSEO.parent_id"
                       size="large"
-                      name="attribute_group_id"
-                      options={attributeGroupOptions!}
-                      label="Attribute Group"
-                      placeholder="Select"
+                      label="Parent ID"
+                    />
+                  </div>
+                  <div style={{ margin: "10px 0px" }}>
+                    <FormInput
+                      type="text"
+                      name="metaSEO.url_key"
+                      size="large"
+                      label="Url Key"
+                    />
+                  </div>
+                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
+                    <FormInput
+                      type="text"
+                      name="metaSEO.meta_title"
+                      size="large"
+                      label="Meta Title"
+                    />
+                  </div>
+                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
+                    <FormInput
+                      type="text"
+                      name="metaSEO.meta_description"
+                      size="large"
+                      label="Meta Description"
+                    />
+                  </div>
+                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
+                    <FormDynamicInputField
+                      name="keywords"
+                      subName="name"
+                      label="Category Keywords"
+                      placeholder="keyword name"
+                      size="middle"
                     />
                   </div>
                 </div>
@@ -173,28 +200,44 @@ const AttributeCreationPage = () => {
                 Setting
               </p>
               <div>
+                {/* add image component here */}
+                <SEUpload name="file" />
+              </div>
+            </div>
+            <div
+              style={{
+                border: "1px solid #d9d9d9",
+                borderRadius: "5px",
+                padding: "15px",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "18px",
+                  marginBottom: "10px",
+                }}
+              >
+                Setting
+              </p>
+              <div>
                 <div style={{ margin: "10px 0px" }}>
                   <FormRadioField
                     size="large"
-                    name="is_required"
+                    name="status"
                     options={filterableOptions}
-                    label="Is Required?"
+                    label="Status"
+                    onValueChange={(value) => setIsRequired(value)}
                   />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
                   <FormRadioField
                     size="large"
-                    name="is_filterable"
+                    name="include_in_nav"
                     options={filterableOptions}
-                    label="Is Filterable?"
-                  />
-                </div>
-                <div style={{ margin: "10px 0px" }}>
-                  <FormRadioField
-                    size="large"
-                    name="display_on_frontend"
-                    options={filterableOptions}
-                    label="Show to customers?"
+                    label="Include In Nav?"
+                    onValueChange={(value) => setIsFilterable(value)}
                   />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
@@ -202,9 +245,9 @@ const AttributeCreationPage = () => {
                     max={10}
                     min={3}
                     styles={{ width: "100%" }}
-                    name="sort_order"
+                    name="position"
                     size="large"
-                    label="Sort Order"
+                    label="Position"
                   />
                 </div>
               </div>
@@ -219,4 +262,4 @@ const AttributeCreationPage = () => {
   );
 };
 
-export default AttributeCreationPage;
+export default CategoryCreationPage;
