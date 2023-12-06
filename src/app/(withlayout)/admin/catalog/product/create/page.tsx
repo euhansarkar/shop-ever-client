@@ -7,19 +7,18 @@ import StepperForm from "@/components/stepper/FormStepper";
 
 import ActionBar from "@/components/ui/ActionBar";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
-import { useAddAttributeMutation } from "@/redux/api/attributeApi";
+import {
+  useAddAttributeMutation,
+  useAttributesQuery,
+} from "@/redux/api/attributeApi";
 import { useAttributeGroupsQuery } from "@/redux/api/attributeGroupApi";
 import { Button, Col, Row, Select, Space, message } from "antd";
 import { Option } from "antd/es/mentions";
 
 const ProductCreationPage = () => {
   const [addAttribute] = useAddAttributeMutation();
-  const { data, isLoading } = useAttributeGroupsQuery({ page: 1, limit: 100 });
-  const attributeGroups = data?.attributeGroups;
-  const attributeGroupOptions = attributeGroups?.map((group) => ({
-    label: group?.group_name,
-    value: group?.id,
-  }));
+
+  const { data, isLoading } = useAttributesQuery({ page: 1, limit: 100 });
 
   const steps = [
     {
@@ -47,7 +46,6 @@ const ProductCreationPage = () => {
     formData.append("data", data);
     message.loading("Creating...");
     try {
-
       console.log(values);
       // const res = await addStudentWithFormData(formData);
       // if (!!res) {
@@ -56,6 +54,10 @@ const ProductCreationPage = () => {
     } catch (err: any) {
       console.error(err.message);
     }
+  };
+
+  const defaultValues = {
+    product_attributes: data?.attributes || "",
   };
 
   return (
@@ -78,6 +80,7 @@ const ProductCreationPage = () => {
       />
       <ActionBar title="attribute creation" />
       <StepperForm
+        defaultValues={defaultValues}
         persistKey="student-create-form"
         submitHandler={(value) => {
           handleStudentSubmit(value);

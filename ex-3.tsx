@@ -1,7 +1,9 @@
 import { Button, Empty, Switch } from "antd";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import FormInput from "../Forms/FormInput";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import FormSelectField from "@/components/Forms/FormSelectField";
+import FormInput from "@/components/Forms/FormInput";
+import UncontrolledFormInput from "@/components/Forms/UncontrolledFormInput";
 
 type DynamicInputProps = {
   name: string;
@@ -9,6 +11,7 @@ type DynamicInputProps = {
   size: "small" | "middle" | "large";
   placeholder: string;
   label: string;
+  id: string;
 };
 
 const FormDynamicFields = ({
@@ -17,9 +20,10 @@ const FormDynamicFields = ({
   size,
   placeholder,
   label,
+  id,
 }: DynamicInputProps) => {
   const { control, setValue, getValues } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
+  let { fields, append, remove } = useFieldArray({
     control,
     name: name,
     keyName: "customId",
@@ -31,7 +35,14 @@ const FormDynamicFields = ({
     setValue(name, currentOptions);
   };
 
-  console.log(fields);
+  fields = fields?.filter((field) => field?.attribute_group_id === id);
+
+  const attributeOptions = fields?.map((group) => ({
+    label: group?.attribute_name,
+    value: group?.id,
+  }));
+
+  console.log(`this data is from att selection`, fields);
 
   return (
     <>
@@ -56,13 +67,13 @@ const FormDynamicFields = ({
                   alignItems: "center",
                 }}
               >
-                <FormInput
-                  type="text"
+                <FormSelectField
                   name={`${name}.${index}.${subName}`}
                   size={size}
                   placeholder={`${placeholder}: ${index}`}
+                  options={attributeOptions!}
                 />
-                
+
                 <Button
                   type="primary"
                   onClick={() => remove(index)}

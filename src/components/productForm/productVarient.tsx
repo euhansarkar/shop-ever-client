@@ -4,8 +4,12 @@ import { useAttributeGroupsQuery } from "@/redux/api/attributeGroupApi";
 import { Col, Row } from "antd";
 import { useState } from "react";
 import AttSelection from "./attributeSelection/AttSelection";
+import UncontrolledAttSelection from "./attributeSelection/UncontrolledAttSelection";
 
 const ProductVarient = () => {
+  const [selectedAttributeOption, setSelectedAttributeOption] = useState<
+    string | undefined
+  >(undefined);
   const { data, isLoading } = useAttributeGroupsQuery({ page: 1, limit: 100 });
   const attributeGroups = data?.attributeGroups;
   const attributeGroupOptions = attributeGroups?.map((group) => ({
@@ -13,9 +17,7 @@ const ProductVarient = () => {
     value: group?.id,
   }));
 
-  const [selectedAttributeOption, setSelectedAttributeOption] = useState<
-    string | undefined
-  >(undefined);
+  console.log(attributeGroupOptions);
 
   console.log(`attribute group selected`, selectedAttributeOption);
 
@@ -44,14 +46,14 @@ const ProductVarient = () => {
               <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
                 <FormSelectField
                   size="large"
-                  name="attribute_group_id"
                   options={attributeGroupOptions!}
                   label="Attribute Group"
                   placeholder="Select"
-                  selectedValue={selectedAttributeOption}
                   onSelectedValueChange={(value) =>
                     setSelectedAttributeOption(value)
                   }
+                  selectedValue={selectedAttributeOption}
+                  name="attribute_group_id"
                 />
               </div>
 
@@ -59,14 +61,15 @@ const ProductVarient = () => {
               {selectedAttributeOption && (
                 <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
                   {/* <AttributeSelection id={selectedAttributeOption} /> */}
-                  <AttSelection
+                  {/* <AttSelection
                     id={selectedAttributeOption}
                     name="product_attributes"
                     subName="attribute_id"
                     label="Product Attributes"
                     placeholder="product attribute option"
                     size="middle"
-                  />
+                  /> */}
+                  <UncontrolledAttSelection id={selectedAttributeOption} />
                 </div>
               )}
             </div>

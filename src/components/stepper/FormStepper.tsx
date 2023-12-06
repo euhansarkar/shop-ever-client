@@ -7,12 +7,16 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
+interface IFormConfig {
+  defaultValues?: Record<string, any>;
+}
+
 interface ISteps {
   title?: string;
   content?: React.ReactElement | React.ReactNode;
 }
 
-interface IStepsProps {
+interface IStepsProps extends IFormConfig {
   steps: ISteps[];
   persistKey: string;
   submitHandler: (el: any) => void;
@@ -24,8 +28,14 @@ const StepperForm = ({
   submitHandler,
   navigateLink,
   persistKey,
+  defaultValues,
 }: IStepsProps) => {
   const router = useRouter();
+
+  // default value set
+  const formConfig: IFormConfig = {};
+
+  if (!!defaultValues) formConfig["defaultValues"] = defaultValues;
 
   const [current, setCurrent] = useState<number>(
     !!getFromLocalStorage("step")
@@ -53,18 +63,9 @@ const StepperForm = ({
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
-  const methods = useForm({ defaultValues: savedValues });
+  const methods = useForm(formConfig);
   const watch = methods.watch();
 
-  // const { data: attGroupData, isLoading } = useAttributesQuery({
-  //   page: 1,
-  //   limit: 100,
-  // });
-
-  // const methods = useForm({
-  //   defaultValues: { product_attributes: attGroupData?.data || "" },
-  // });
-  // const watch = methods.watch();
 
   useEffect(() => {
     setToLocalStorage(persistKey, JSON.stringify(watch));
@@ -79,6 +80,10 @@ const StepperForm = ({
     setToLocalStorage(persistKey, JSON.stringify({}));
     navigateLink && router.push(navigateLink);
   };
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset, methods]);
 
   return (
     <>

@@ -11,7 +11,7 @@ export type SelectOptions = {
 type SelectFieldProps = {
   options: SelectOptions[];
   name: string;
-  size?: "large" | "small";
+  size?: "large" | "small" | "middle";
   value?: string | string[] | undefined;
   placeholder?: string;
   label?: string;
@@ -19,6 +19,7 @@ type SelectFieldProps = {
   handleChange?: (el: string) => void;
   selectedValue?: string | undefined;
   onSelectedValueChange?: (value: string | undefined) => void;
+  disabled?: boolean;
 };
 
 const FormSelectField = ({
@@ -32,6 +33,7 @@ const FormSelectField = ({
   handleChange,
   selectedValue,
   onSelectedValueChange,
+  disabled,
 }: SelectFieldProps) => {
   const { control } = useFormContext();
 
@@ -47,9 +49,10 @@ const FormSelectField = ({
               if (onSelectedValueChange) onSelectedValueChange(val);
               else onChange(val);
             }}
-            value={selectedValue || value}
+            value={selectedValue ? selectedValue : value}
             size={size}
             options={options}
+            disabled={disabled}
             style={{ width: "100%" }}
             placeholder={placeholder}
           />
