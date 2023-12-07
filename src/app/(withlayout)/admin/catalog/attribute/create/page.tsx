@@ -8,7 +8,7 @@ import AttributeGroupPage from "@/components/attributeGroup/AttributeGroup";
 import ActionBar from "@/components/ui/ActionBar";
 import FormDynamicInputField from "@/components/ui/FormDynamicInputField";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
-import { filterableOptions } from "@/constants/global";
+import { filterableOptions, myOptions } from "@/constants/global";
 import { useAddAttributeMutation } from "@/redux/api/attributeApi";
 import { useAttributeGroupsQuery } from "@/redux/api/attributeGroupApi";
 import { Button, Col, Row, Space, message } from "antd";
@@ -36,24 +36,7 @@ const AttributeCreationPage = () => {
   }));
 
 
-  const myOptions = [
-    {
-      label: "Text",
-      value: "text",
-    },
-    {
-      label: "Select",
-      value: "select",
-    },
-    {
-      label: "MultiSelect",
-      value: "multi-select",
-    },
-    {
-      label: "TextArea",
-      value: "textarea",
-    },
-  ];
+
 
   const handleOnSubmit = async (data: any) => {
     try {

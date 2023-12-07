@@ -25,12 +25,10 @@ const CategoryCreationPage = () => {
     const obj = { ...values };
     const file = obj["file"];
     delete obj["file"];
-    console.log(`after deleting from object`, file);
     const data = JSON.stringify(obj);
     const formData = new FormData();
     formData.append("file", file as Blob);
     formData.append("data", data);
-    console.log(`form data`, formData);
     message.loading("Creating...");
 
     try {

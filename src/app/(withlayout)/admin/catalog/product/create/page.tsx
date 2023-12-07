@@ -1,64 +1,66 @@
 "use client";
-
-import ProductInfo from "@/components/productForm/ProductInfo";
-import ProductSetting from "@/components/productForm/productSetting";
-import ProductVarient from "@/components/productForm/productVarient";
-import StepperForm from "@/components/stepper/FormStepper";
-
+import Form from "@/components/Forms/Form";
+import FormInput from "@/components/Forms/FormInput";
+import FormRadioField from "@/components/Forms/FormRadioField";
+import FormSelectField from "@/components/Forms/FormSelectField";
 import ActionBar from "@/components/ui/ActionBar";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
-import {
-  useAddAttributeMutation,
-  useAttributesQuery,
-} from "@/redux/api/attributeApi";
-import { useAttributeGroupsQuery } from "@/redux/api/attributeGroupApi";
+import { filterableOptions } from "@/constants/global";
 import { Button, Col, Row, Select, Space, message } from "antd";
 import { Option } from "antd/es/mentions";
+import { useState } from "react";
+import RichTextEditor from "@/components/editor/RichTextEditor";
+import { useCategoriesQuery } from "@/redux/api/categoryApi";
+import {
+  useAttributeGroupsQuery,
+} from "@/redux/api/attributeGroupApi";
+import { useAddProductMutation } from "@/redux/api/productApi";
 
 const ProductCreationPage = () => {
-  const [addAttribute] = useAddAttributeMutation();
+  const [addProduct] = useAddProductMutation();
+  const [manageStock, setManageStock] = useState<string | undefined>(undefined);
+  const [stockAvailability, setStockAvailability] = useState<string | undefined>(undefined);
+  const [taxClass, setTaxClass] = useState<string | undefined>(undefined);
 
-  const { data, isLoading } = useAttributesQuery({ page: 1, limit: 100 });
+  const { data, isLoading } = useCategoriesQuery({ page: 1, limit: 100 });
+  const categories = data?.categories;
+  const categoryOptions = categories?.map((category) => ({
+    label: category?.name,
+    value: category?.id,
+  }));
 
-  const steps = [
-    {
-      title: "Product Information",
-      content: <ProductInfo />,
-    },
-    {
-      title: "Product Varient",
-      content: <ProductVarient />,
-    },
-    {
-      title: "Product Settings",
-      content: <ProductSetting />,
-    },
-  ];
+  const { data: attGroupData, isLoading: loading } = useAttributeGroupsQuery({
+    page: 1,
+    limit: 100,
+  });
+  const attributeGroups = attGroupData?.attributeGroups;
+  const attributeGroupOptions = attributeGroups?.map((attributeGroup) => ({
+    label: attributeGroup?.group_name,
+    value: attributeGroup?.id,
+  }));
 
-  const handleStudentSubmit = async (values: any) => {
-    console.log(values);
-    const obj = { ...values };
-    const file = obj["file"];
-    delete obj["file"];
-    const data = JSON.stringify(obj);
-    const formData = new FormData();
-    formData.append("file", file as Blob);
-    formData.append("data", data);
-    message.loading("Creating...");
+  const handleOnSubmit = async (data: any) => {
     try {
-      console.log(values);
-      // const res = await addStudentWithFormData(formData);
-      // if (!!res) {
-      //   message.success("Student created successfully!");
-      // }
-    } catch (err: any) {
-      console.error(err.message);
+      console.log(data);
+      const res = await addProduct(data).unwrap();
+      console.log(res);
+
+      if (res?.id) {
+        message.success(`product created successfully`);
+      }
+    } catch (error: any) {
+      console.error(error.message);
     }
   };
 
-  const defaultValues = {
-    product_attributes: data?.attributes || "",
-  };
+  const selectAfter = (
+    <Select defaultValue=".com">
+      <Option value=".com">.com</Option>
+      <Option value=".jp">.jp</Option>
+      <Option value=".cn">.cn</Option>
+      <Option value=".org">.org</Option>
+    </Select>
+  );
 
   return (
     <>
@@ -78,15 +80,196 @@ const ProductCreationPage = () => {
           },
         ]}
       />
-      <ActionBar title="attribute creation" />
-      <StepperForm
-        defaultValues={defaultValues}
-        persistKey="student-create-form"
-        submitHandler={(value) => {
-          handleStudentSubmit(value);
-        }}
-        steps={steps}
-      />
+      <ActionBar title="product creation" />
+
+      <Form submitHandler={handleOnSubmit}>
+        <Row gutter={{ xs: 24, xl: 8, lg: 8, md: 24 }}>
+          <Col span={16} style={{ margin: "10px 0" }}>
+            <div
+              style={{
+                border: "1px solid #d9d9d9",
+                borderRadius: "5px",
+                padding: "15px",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontSize: "18px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  General
+                </p>
+                <div>
+                  <div style={{ margin: "10px 0px" }}>
+                    <FormInput
+                      type="text"
+                      name="name"
+                      size="large"
+                      label="Product Name"
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div style={{ margin: "10px 0px", flexBasis: "33%" }}>
+                      <FormInput
+                        type="text"
+                        name="sku"
+                        size="large"
+                        label="SKU"
+                      />
+                    </div>
+                    <div style={{ margin: "10px 0px", flexBasis: "33%" }}>
+                      <FormSelectField
+                        size="large"
+                        name="category_id"
+                        options={categoryOptions!}
+                        label="Category"
+                        placeholder="Select"
+                      />
+                    </div>
+                    <div style={{ margin: "10px 0px", flexBasis: "33%" }}>
+                      <FormSelectField
+                        size="large"
+                        name="attribute_group_id"
+                        options={attributeGroupOptions!}
+                        label="Attribute Group"
+                        placeholder="Select"
+                      />
+                    </div>
+                  </div>
+                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
+                    <RichTextEditor
+                      styles={{
+                        backgroundColor: "white",
+                        borderRadius: "10px",
+                      }}
+                      label="Description"
+                      name="description"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                border: "1px solid #d9d9d9",
+                borderRadius: "5px",
+                padding: "15px",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontSize: "18px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Search Engine Optimize
+                </p>
+                <div>
+                  <div style={{ margin: "10px 0px" }}>
+                    <FormInput
+                      type="text"
+                      name="meta_seo.url_key"
+                      size="large"
+                      label="Url Key"
+                    />
+                  </div>
+                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
+                    <FormInput
+                      type="text"
+                      name="meta_seo.meta_title"
+                      size="large"
+                      label="Meta Title"
+                    />
+                  </div>
+                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
+                    <FormInput
+                      type="text"
+                      name="meta_seo.meta_description"
+                      size="large"
+                      label="Meta Description"
+                    />
+                  </div>
+                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
+                    <FormInput
+                      type="text"
+                      name="meta_seo.parent_id"
+                      size="large"
+                      label="Parent Id"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Col>
+          {/* second col */}
+          <Col span={8} style={{ margin: "10px 0" }}>
+            <div
+              style={{
+                border: "1px solid #d9d9d9",
+                borderRadius: "5px",
+                padding: "15px",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "18px",
+                  marginBottom: "10px",
+                }}
+              >
+                Setting
+              </p>
+              <div>
+                <div style={{ margin: "10px 0px" }}>
+                  <FormRadioField
+                    size="large"
+                    name="manage_stock"
+                    options={filterableOptions}
+                    label="Manage Stock"
+                    onValueChange={(value) => setManageStock(value)}
+                  />
+                </div>
+                <div style={{ margin: "10px 0px" }}>
+                  <FormRadioField
+                    size="large"
+                    name="stock_availability"
+                    options={filterableOptions}
+                    label="Stock Availability?"
+                    onValueChange={(value) => setStockAvailability(value)}
+                  />
+                </div>
+                <div style={{ margin: "10px 0px" }}>
+                  <FormRadioField
+                    size="large"
+                    name="tax_class"
+                    options={filterableOptions}
+                    label="Tax Class?"
+                    onValueChange={(value) => setTaxClass(value)}
+                  />
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Button type="primary" htmlType="submit">
+          submit
+        </Button>
+      </Form>
     </>
   );
 };

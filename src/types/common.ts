@@ -94,3 +94,31 @@ export interface ICategory {
     Meta_SEO: IMetaSEO;
 }
 
+export interface IVarient {
+    name: string;
+    description: string;
+    sku: string;
+    manage_stock: boolean;
+    stock_availability: boolean;
+    tax_class: boolean;
+    attribute_group_id: string;
+    category_id: string;
+    meta_seo: IMetaSEO
+}
+
+interface IVarientOption {
+    attribute_name: string;
+    option_id: string;
+}
+
+export interface IProduct {
+    sku: string;
+    qty: number;
+    price: number;
+    weight: number;
+    status: boolean;
+    visibility: boolean;
+    product_id: string;
+    images: IImage[];
+    varient_options: IVarientOption[];
+}

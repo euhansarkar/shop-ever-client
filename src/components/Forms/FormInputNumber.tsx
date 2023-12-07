@@ -45,7 +45,7 @@ const FormInputNumber = ({
           *
         </span>
       ) : null}
-      {label ? label : null}
+      <p>{label ? label : null}</p>
       <Controller
         control={control}
         name={name}
