@@ -22,6 +22,7 @@ const CategoryCreationPage = () => {
   const [addCategory] = useAddCategoryMutation();
 
   const handleOnSubmit = async (values: any) => {
+    console.log(values);
     const obj = { ...values };
     const file = obj["file"];
     delete obj["file"];

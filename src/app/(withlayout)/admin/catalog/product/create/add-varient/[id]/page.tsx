@@ -12,7 +12,7 @@ import {
   useAttributeGroupQuery,
   useAttributeGroupsQuery,
 } from "@/redux/api/attributeGroupApi";
-import { useAddProductMutation } from "@/redux/api/productApi";
+import { useAddProductMutation, useProductQuery } from "@/redux/api/productApi";
 import SEVarientModal from "@/components/varient/SEVarientModal";
 import SEUpload from "@/components/ui/SEUpload";
 import FormInputNumber from "@/components/Forms/FormInputNumber";
@@ -20,46 +20,67 @@ import SESwitch from "@/components/ui/SESwitch";
 import SEMultipleUpload from "@/components/ui/SEMultipleUpload";
 import { IAttribute } from "@/types";
 import { useAddVarientMutation } from "@/redux/api/varientApi";
+import SETable from "@/components/ui/SETable";
+import VarientView from "@/components/varient/VarientView";
 
-const ProductCreationPage = () => {
-  const [addVarient] = useAddVarientMutation();
+const ProductCreationPage = ({ params }: any) => {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedpromoType, setSelectedpromoType] = useState<
     string | undefined
   >(undefined);
 
-  const id = "0a503775-3776-470d-8d3c-a55f9f5cdf22";
-  const { data, isLoading } = useAttributeGroupQuery(id);
+  const { data: productData, isLoading: productLoading } = useProductQuery(
+    params?.id
+  );
+
+  const { data, isLoading } = useAttributeGroupQuery(
+    productData?.attribute_group_id
+  );
   const attributes = data?.attributes;
 
-  const { data: attGroupData, isLoading: loading } = useAttributeGroupsQuery({
-    page: 1,
-    limit: 100,
-  });
-  const attributeGroups = attGroupData?.attributeGroups;
-  const attributeGroupOptions = attributeGroups?.map((attributeGroup) => ({
-    label: attributeGroup?.group_name,
-    value: attributeGroup?.id,
-  }));
+  const [addVarient] = useAddVarientMutation();
 
   const handleOnSubmit = async (values: any) => {
+    console.log(values);
     const obj = { ...values };
-    const file = obj["files"];
+    const files = obj["files"];
     delete obj["files"];
-    const data = JSON.stringify(obj);
+
+    // data modification
+    const { price, qty, sku, status, visibility, weight, ...attributeData } =
+      obj;
+    const attArr = [];
+    for (const att in attributeData) {
+      const newData = { attribute_name: att, option_id: attributeData[att] };
+      attArr.push(newData);
+    }
+
+    const newData = {
+      price,
+      qty,
+      sku,
+      status,
+      visibility,
+      weight,
+      product_id: params?.id,
+      varient_options: attArr,
+    };
+
+    const data = JSON.stringify(newData);
     const formData = new FormData();
-    formData.append("files", file as Blob);
+    formData.append("files", files as Blob);
     formData.append("data", data);
     message.loading("Creating...");
-    const res = await addVarient(data).unwrap();
-    console.log(res);
+
     try {
-      const res = await addVarient(data).unwrap();
+      const res = await addVarient(formData).unwrap();
       if (res?.id) {
         message.success(`varient created successfully`);
+        setOpen(false);
       }
     } catch (error: any) {
       console.error(error.message);
+      setOpen(false);
     }
   };
 
@@ -71,10 +92,6 @@ const ProductCreationPage = () => {
       <Option value=".org">.org</Option>
     </Select>
   );
-
-  const handleFormSubmit = () => {
-    console.log(`hello world`);
-  };
 
   return (
     <>
@@ -92,21 +109,29 @@ const ProductCreationPage = () => {
             label: "create",
             link: `/admin/catalog/product/create`,
           },
+          {
+            label: "add-varient",
+            link: `/admin/catalog/product/create/add-varient/${params?.id}`,
+          },
         ]}
       />
-      <ActionBar title="Product Varient Addition" />
+      <ActionBar title="Product Varient Addition">
+        <Button
+          type="primary"
+          onClick={() => {
+            setOpen(true);
+          }}
+          danger
+          style={{ marginLeft: "3px" }}
+        >
+          add new
+        </Button>
+      </ActionBar>
 
-      <Button
-        type="primary"
-        onClick={() => {
-          setOpen(true);
-        }}
-        danger
-        style={{ marginLeft: "3px" }}
-      >
-        add new
-      </Button>
+      {/* varient table */}
+      <VarientView />
 
+      {/* varient creation modal */}
       <SEVarientModal
         title="Add Varient"
         isOpen={open}
@@ -250,7 +275,9 @@ const ProductCreationPage = () => {
                       Images
                     </p>
                     <div>
+                      {/* if multiple image upload completed without error then add here instead of single upload */}
                       <SEMultipleUpload name="files" />
+                      {/* <SEUpload name="file" /> */}
                     </div>
                   </div>
                 </div>

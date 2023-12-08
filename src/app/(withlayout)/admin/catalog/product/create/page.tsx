@@ -11,15 +11,17 @@ import { Option } from "antd/es/mentions";
 import { useState } from "react";
 import RichTextEditor from "@/components/editor/RichTextEditor";
 import { useCategoriesQuery } from "@/redux/api/categoryApi";
-import {
-  useAttributeGroupsQuery,
-} from "@/redux/api/attributeGroupApi";
+import { useAttributeGroupsQuery } from "@/redux/api/attributeGroupApi";
 import { useAddProductMutation } from "@/redux/api/productApi";
+import { useRouter } from "next/navigation";
 
 const ProductCreationPage = () => {
+  const router = useRouter();
   const [addProduct] = useAddProductMutation();
   const [manageStock, setManageStock] = useState<string | undefined>(undefined);
-  const [stockAvailability, setStockAvailability] = useState<string | undefined>(undefined);
+  const [stockAvailability, setStockAvailability] = useState<
+    string | undefined
+  >(undefined);
   const [taxClass, setTaxClass] = useState<string | undefined>(undefined);
 
   const { data, isLoading } = useCategoriesQuery({ page: 1, limit: 100 });
@@ -41,12 +43,12 @@ const ProductCreationPage = () => {
 
   const handleOnSubmit = async (data: any) => {
     try {
-      console.log(data);
       const res = await addProduct(data).unwrap();
       console.log(res);
 
       if (res?.id) {
         message.success(`product created successfully`);
+        router.push(`/admin/catalog/product/create/add-varient/${res?.id}`);
       }
     } catch (error: any) {
       console.error(error.message);

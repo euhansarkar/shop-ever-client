@@ -31,6 +31,7 @@ const PromoCreationPage = () => {
 
   const handleOnSubmit = async (data: any) => {
     try {
+      console.log(data);
       const arr = [];
       for (const att in data) {
         const newData = { name: att, value: data[att] };

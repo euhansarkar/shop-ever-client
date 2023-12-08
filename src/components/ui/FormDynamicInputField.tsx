@@ -31,7 +31,6 @@ const FormDynamicFields = ({
     setValue(name, currentOptions);
   };
 
-  console.log(fields);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import {  IMeta, IProduct } from "@/types";
+import { IMeta, IProduct, IVarient } from "@/types";
 import { baseApi } from "./baseApi";
 import { tagTypes } from '../tag-types';
 import { crudTypes } from "../crud-types";
@@ -16,7 +16,7 @@ export const varientApi = baseApi.injectEndpoints({
                     params: arg,
                 };
             },
-            transformResponse: (response: IProduct[], meta: IMeta) => {
+            transformResponse: (response: IVarient[], meta: IMeta) => {
                 return {
                     varients: response,
                     meta,
@@ -38,7 +38,7 @@ export const varientApi = baseApi.injectEndpoints({
                 url: BASE_VARIENT_API_URL,
                 method: crudTypes.POST,
                 data,
-                // contentType: "multipart/form-data"
+                contentType: "multipart/form-data"
             }),
             invalidatesTags: [tagTypes.varient],
         }),

@@ -106,7 +106,7 @@ export interface IVarient {
     meta_seo: IMetaSEO
 }
 
-interface IVarientOption {
+export interface IVarientOption {
     attribute_name: string;
     option_id: string;
 }

@@ -36,8 +36,6 @@ const AttributeCreationPage = () => {
   }));
 
 
-
-
   const handleOnSubmit = async (data: any) => {
     try {
       console.log(data);
