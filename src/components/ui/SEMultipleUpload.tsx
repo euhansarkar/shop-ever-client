@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload, message } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
@@ -28,14 +28,20 @@ const beforeUpload = (file: RcFile) => {
 
 type ImageUploadProps = {
   name: string;
+  images?: UploadFile[];
 };
 
-const SEMultipleUpload = ({ name }: ImageUploadProps) => {
+const SEMultipleUpload = ({ name, images }: ImageUploadProps) => {
   const { setValue } = useFormContext();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  useEffect(() => {
+    //@ts-ignore
+    setFileList(images);
+  }, [images]);
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -73,7 +79,7 @@ const SEMultipleUpload = ({ name }: ImageUploadProps) => {
         beforeUpload={beforeUpload}
         multiple={true}
       >
-        {fileList.length >= 8 ? null : uploadButton}
+        {fileList?.length >= 8 ? null : uploadButton}
       </Upload>
       <Modal
         open={previewOpen}

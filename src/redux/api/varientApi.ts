@@ -48,6 +48,7 @@ export const varientApi = baseApi.injectEndpoints({
                 url: `${BASE_VARIENT_API_URL}/${data.id}`,
                 method: crudTypes.PATCH,
                 data: data.body,
+                contentType: "multipart/form-data"
             }),
             invalidatesTags: [tagTypes.varient],
         }),

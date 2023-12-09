@@ -17,6 +17,8 @@ import {
   useCategoriesQuery,
   useDeleteCategoryMutation,
 } from "@/redux/api/categoryApi";
+import { useVarientsQuery } from "@/redux/api/varientApi";
+import { IProduct } from "@/types";
 
 const ProductPage = () => {
   const query: Record<string, any> = {};
@@ -43,35 +45,32 @@ const ProductPage = () => {
     query["searchTerm"] = debouncedSearchTerm;
   }
 
-  const { data, isLoading } = useCategoriesQuery({ page: 1, limit: 10 });
+  const { data, isLoading } = useVarientsQuery({ page: 1, limit: 10 });
   const [deleteCategory] = useDeleteCategoryMutation();
-  const categories = data?.categories;
+  const categories = data?.varients;
   const meta = data?.meta;
 
   const columns = [
     {
       title: "Product Name",
-      dataIndex: "name",
-      sorter: true,
+      dataIndex: "product",
+      render: function (data: any) {
+        const productName = data?.name
+        return <>{productName}</>;
+      },
       
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      sorter: true,
-      render: function (data: boolean) {
-        const status = data ? "Live" : "Not-Live";
-        return <>{status}</>;
-      },
+      title: "Price",
+      dataIndex: "price",
     },
     {
-      title: "Include In Menu",
-      dataIndex: "include_in_nav",
-      sorter: true,
-      render: function (data: boolean) {
-        const isAddedInNav = data ? "Yes" : "No";
-        return <>{isAddedInNav}</>;
-      },
+      title: "SKU",
+      dataIndex: "sku",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "qty",
     },
     {
       title: "Action",
@@ -185,7 +184,7 @@ const ProductPage = () => {
       />
 
       <SEModal
-        title="Remove admin"
+        title="Remove Attribute"
         isOpen={open}
         closeModal={() => setOpen(false)}
         handleOk={() => deleteOne(CategoryId)}

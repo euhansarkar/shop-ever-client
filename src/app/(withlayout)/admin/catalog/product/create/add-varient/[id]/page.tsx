@@ -129,7 +129,7 @@ const ProductCreationPage = ({ params }: any) => {
       </ActionBar>
 
       {/* varient table */}
-      <VarientView />
+      <VarientView id={params?.id} />
 
       {/* varient creation modal */}
       <SEVarientModal

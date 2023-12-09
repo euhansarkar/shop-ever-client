@@ -3,7 +3,7 @@ import { crudTypes } from "../crud-types";
 import { tagTypes } from '../tag-types';
 import { baseApi } from "./baseApi";
 
-const BASE_ATTRIBUTE_API_URL = "/products";
+const BASE_PRODUCT_API_URL = "/products";
 
 export const productApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
@@ -11,7 +11,7 @@ export const productApi = baseApi.injectEndpoints({
         products: build.query({
             query: (arg?: Record<string, any>) => {
                 return {
-                    url: BASE_ATTRIBUTE_API_URL,
+                    url: BASE_PRODUCT_API_URL,
                     method: crudTypes.GET,
                     params: arg,
                 };
@@ -27,7 +27,7 @@ export const productApi = baseApi.injectEndpoints({
         // get single product
         product: build.query({
             query: (id: string | string[] | undefined) => ({
-                url: `${BASE_ATTRIBUTE_API_URL}/${id}`,
+                url: `${BASE_PRODUCT_API_URL}/${id}`,
                 method: crudTypes.GET,
             }),
             providesTags: [tagTypes.product],
@@ -35,7 +35,7 @@ export const productApi = baseApi.injectEndpoints({
         // create  product
         addProduct: build.mutation({
             query: (data) => ({
-                url: BASE_ATTRIBUTE_API_URL,
+                url: BASE_PRODUCT_API_URL,
                 method: crudTypes.POST,
                 data,
             }),
@@ -44,7 +44,7 @@ export const productApi = baseApi.injectEndpoints({
         // update product
         updateProduct: build.mutation({
             query: (data) => ({
-                url: `${BASE_ATTRIBUTE_API_URL}/${data.id}`,
+                url: `${BASE_PRODUCT_API_URL}/${data.id}`,
                 method: crudTypes.PATCH,
                 data: data.body,
             }),
@@ -53,7 +53,7 @@ export const productApi = baseApi.injectEndpoints({
         // delete product
         deleteProduct: build.mutation({
             query: (id: string) => ({
-                url: `${BASE_ATTRIBUTE_API_URL}/${id}`,
+                url: `${BASE_PRODUCT_API_URL}/${id}`,
                 method: crudTypes.DELETE,
             }),
             invalidatesTags: [tagTypes.product],
