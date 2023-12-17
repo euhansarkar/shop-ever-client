@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SETable from "../ui/SETable";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import Link from "next/link";
@@ -20,6 +20,7 @@ import { useProductQuery } from "@/redux/api/productApi";
 import FormSelectField from "../Forms/FormSelectField";
 import { IAttribute } from "@/types";
 import { IVarientOption } from "../../types/common";
+import SEUpload from "../ui/SEUpload";
 
 const VarientView = ({ id }: { id: string }) => {
   const query: Record<string, any> = {};
@@ -30,12 +31,18 @@ const VarientView = ({ id }: { id: string }) => {
   const [sortOrder, setSortOrder] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
+  const [productId, setProductId] = useState<string>("");
   const [varientId, setVarientId] = useState<string>("");
 
-  query["limit"] = size;
+  useEffect(() => {
+    setProductId(id);
+  }, [id]);
+
   query["page"] = page;
+  query["limit"] = size;
   query["sortBy"] = sortBy;
   query["sortOrder"] = sortOrder;
+  query["product_id"] = productId;
 
   const debouncedSearchTerm = useDebounced({
     searchQuery: searchTerm,
@@ -53,7 +60,9 @@ const VarientView = ({ id }: { id: string }) => {
   const { data: productData, isLoading: productLoading } = useProductQuery(id);
 
   // get all varients
-  const { data, isLoading } = useVarientsQuery({ page: 1, limit: 10 });
+  const { data, isLoading } = useVarientsQuery({
+    ...query,
+  });
   const varients = data?.varients;
   const meta = data?.meta;
 
@@ -88,13 +97,13 @@ const VarientView = ({ id }: { id: string }) => {
     return newImg;
   });
 
-  //   const dynamicColumns = varients?.varient_options?.map((varient: IVarientOption) => {
-  //     if (varient && varient.attribute_name && varient.option_id) {
-  //       return { title: varient.attribute_name, dataIndex: varient.option_id };
-  //     } else {
-  //       return null;
-  //     }
-  //   });
+  // const dynamicColumns = varients?.varient_options?.map((varient: IVarientOption) => {
+  //   if (varient && varient.attribute_name && varient.option_id) {
+  //     return { title: varient.attribute_name, dataIndex: varient.option_id };
+  //   } else {
+  //     return null;
+  //   }
+  // });
 
   const columns = [
     {
@@ -149,10 +158,10 @@ const VarientView = ({ id }: { id: string }) => {
   ];
 
   const onPaginationChange = (page: number, pageSize: number) => {
-    console.log("Page:", page, "PageSize:", pageSize);
     setPage(page);
     setSize(pageSize);
   };
+
   const onTableChange = (pagination: any, filter: any, sorter: any) => {
     const { order, field } = sorter;
     // console.log(order, field);
@@ -168,8 +177,8 @@ const VarientView = ({ id }: { id: string }) => {
 
   const handleOnSubmit = async (values: any) => {
     const obj = { ...values };
-    const files = obj["files"];
-    delete obj["files"];
+    const files = obj["file"];
+    delete obj["file"];
 
     // data modification
     const {
@@ -180,6 +189,7 @@ const VarientView = ({ id }: { id: string }) => {
       visibility,
       weight,
       images,
+      file,
       ...attributeData
     } = obj;
     const attArr = [];
@@ -198,11 +208,11 @@ const VarientView = ({ id }: { id: string }) => {
       varient_options: attArr,
     };
 
-    console.log(newData);
+    console.log(`varient data`, newData);
 
     const data = JSON.stringify(newData);
     const formData = new FormData();
-    formData.append("files", files as Blob);
+    formData.append("file", files as Blob);
     formData.append("data", data);
     message.loading("Creating...");
 
@@ -381,8 +391,8 @@ const VarientView = ({ id }: { id: string }) => {
                     </p>
                     <div>
                       {/* if multiple image upload completed without error then add here instead of single upload */}
-                      <SEMultipleUpload name="files" images={defaultImages} />
-                      {/* <SEUpload name="file" /> */}
+                      {/* <SEMultipleUpload name="files" images={defaultImages} /> */}
+                      <SEUpload name="file" />
                     </div>
                   </div>
                 </div>

@@ -26,10 +26,9 @@ const beforeUpload = (file: RcFile) => {
 
 type ImageUploadProps = {
   name: string;
-  multiple?: boolean
 };
 
-const SEUpload = ({ name, multiple }: ImageUploadProps) => {
+const SEUpload = ({ name}: ImageUploadProps) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>();
   const { setValue } = useFormContext();

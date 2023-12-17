@@ -71,6 +71,7 @@ const AttributeCreationPage = () => {
       <ActionBar title="attribute creation" />
 
       <AttributeGroupPage />
+      
       <Form submitHandler={handleOnSubmit}>
         <Row gutter={{ xs: 24, xl: 8, lg: 8, md: 24 }}>
           <Col span={16} style={{ margin: "10px 0" }}>

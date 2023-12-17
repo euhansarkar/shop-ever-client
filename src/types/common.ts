@@ -95,6 +95,7 @@ export interface ICategory {
 }
 
 export interface IVarient {
+    id: string;
     name: string;
     description: string;
     sku: string;
@@ -107,11 +108,14 @@ export interface IVarient {
 }
 
 export interface IVarientOption {
+    id: string;
     attribute_name: string;
+    varient_id: string;
     option_id: string;
 }
 
-export interface IProduct {
+export type IVariant = {
+    id: string;
     sku: string;
     qty: number;
     price: number;
@@ -119,6 +123,26 @@ export interface IProduct {
     status: boolean;
     visibility: boolean;
     product_id: string;
-    images: IImage[];
+    created_at: string;
+    updated_at: string;
     varient_options: IVarientOption[];
 }
+
+export type IProduct = {
+    id: string;
+    name: string;
+    description: string;
+    sku: string;
+    manage_stock: boolean;
+    stock_availability: boolean;
+    tax_class: boolean;
+    attribute_group_id: string;
+    category_id: string;
+    meta_SEO_id: string;
+    created_at: string;
+    updated_at: string;
+    attribute_group: IAttributeGroup;
+    category: ICategory;
+    meta_SEO: IMetaSEO;
+    varients: IVariant[];
+};

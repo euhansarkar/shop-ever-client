@@ -8,8 +8,11 @@ import {
   MenuProps,
   Row,
   Space,
+  Grid,
+  Divider,
 } from "antd";
 import {
+  MenuOutlined,
   SearchOutlined,
   ShoppingOutlined,
   UserOutlined,
@@ -20,11 +23,14 @@ import { AUTH_KEY } from "@/constants/storageKey";
 import Image from "next/image";
 import img from "@/assets/logo.png";
 import { useCategoriesQuery } from "@/redux/api/categoryApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 const { Header: AntHeader } = Layout;
 
 const SEClientHeader = () => {
+  const { useBreakpoint } = Grid;
+  const { lg, md, sm } = useBreakpoint();
+
   const router = useRouter();
   const query: Record<string, any> = {};
 
@@ -64,11 +70,22 @@ const SEClientHeader = () => {
       ),
     },
   ];
+
+  const categoryItems: MenuProps["items"] = categories?.map((category, i) => ({
+    key: `${i}`,
+    label: (
+      <Link href={`/categories/${category?.id}`}>
+        <Button type="text">{category?.name}</Button>
+      </Link>
+    ),
+  }));
+
   const { role } = getUserInfo() as any;
   return (
     <AntHeader
       style={{
         background: "#fff",
+        borderBottom: "0.1px solid #d4d6d9",
       }}
     >
       <Row
@@ -80,21 +97,28 @@ const SEClientHeader = () => {
       >
         {/* first part */}
         <Col>
-          <Space wrap size={16}>
+          <Space wrap size={16} style={{ marginTop: "12px" }}>
             <Link href={`/home`}>
-              <Image src={img} height={50} width={50} alt="logo" />
+              <Image
+                src={img}
+                height={sm ? 30 : 25}
+                width={sm ? 30 : 25}
+                alt="logo"
+              />
             </Link>
           </Space>
         </Col>
 
         {/* second part */}
-        <Col style={{ display: "flex", gap: "10px" }}>
-          {categories?.map((category) => (
-            <Link key={category?.id} href={`/categories/${category?.name}`}>
-              <Button type="text">{category?.name}</Button>
-            </Link>
-          ))}
-        </Col>
+        {md ? (
+          <Col style={{ display: "flex", gap: "10px" }}>
+            {categories?.map((category) => (
+              <Link key={category?.id} href={`/categories/${category?.id}`}>
+                <Button type="text">{category?.name}</Button>
+              </Link>
+            ))}
+          </Col>
+        ) : null}
 
         {/* third part */}
         <Col
@@ -107,21 +131,38 @@ const SEClientHeader = () => {
         >
           <a>
             <Space wrap size={10}>
-              <Avatar size="large" icon={<SearchOutlined />} />
+              <Avatar
+                size={sm ? "default" : "small"}
+                icon={<SearchOutlined />}
+              />
             </Space>
           </a>
 
           <Space wrap size={10}>
             <Link href={`/cart`}>
-              <Avatar size="large" icon={<ShoppingOutlined />} />
+              <Avatar
+                size={sm ? "default" : "small"}
+                icon={<ShoppingOutlined />}
+              />
             </Link>
           </Space>
 
           <Dropdown menu={{ items }}>
             <Space wrap size={10}>
-              <Avatar size="large" icon={<UserOutlined />} />
+              <Avatar size={sm ? "default" : "small"} icon={<UserOutlined />} />
             </Space>
           </Dropdown>
+
+          {md ? null : (
+            <Dropdown menu={{ items: categoryItems }} trigger={["click"]}>
+              <Space wrap size={10}>
+                <Avatar
+                  size={sm ? "default" : "small"}
+                  icon={<MenuOutlined />}
+                />
+              </Space>
+            </Dropdown>
+          )}
         </Col>
       </Row>
     </AntHeader>

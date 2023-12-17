@@ -41,10 +41,10 @@ const ProductCreationPage = ({ params }: any) => {
   const [addVarient] = useAddVarientMutation();
 
   const handleOnSubmit = async (values: any) => {
-    console.log(values);
+   
     const obj = { ...values };
-    const files = obj["files"];
-    delete obj["files"];
+    const file = obj["file"];
+    delete obj["file"];
 
     // data modification
     const { price, qty, sku, status, visibility, weight, ...attributeData } =
@@ -68,7 +68,7 @@ const ProductCreationPage = ({ params }: any) => {
 
     const data = JSON.stringify(newData);
     const formData = new FormData();
-    formData.append("files", files as Blob);
+    formData.append("file", file as Blob);
     formData.append("data", data);
     message.loading("Creating...");
 
@@ -276,8 +276,8 @@ const ProductCreationPage = ({ params }: any) => {
                     </p>
                     <div>
                       {/* if multiple image upload completed without error then add here instead of single upload */}
-                      <SEMultipleUpload name="files" />
-                      {/* <SEUpload name="file" /> */}
+                      {/* <SEMultipleUpload name="files" /> */}
+                      <SEUpload name="file" />
                     </div>
                   </div>
                 </div>

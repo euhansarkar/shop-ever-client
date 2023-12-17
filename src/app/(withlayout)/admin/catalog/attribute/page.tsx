@@ -36,7 +36,7 @@ const AttributePage = () => {
     query["searchTerm"] = debouncedSearchTerm;
   }
 
-  const { data, isLoading } = useAttributesQuery({ page: 1, limit: 10 });
+  const { data, isLoading } = useAttributesQuery({...query});
   const [deleteAttribute] = useDeleteAttributeMutation();
   const attributes = data?.attributes;
   const meta = data?.meta;

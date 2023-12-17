@@ -19,6 +19,7 @@ import {
 } from "@/redux/api/categoryApi";
 import { useVarientsQuery } from "@/redux/api/varientApi";
 import { IProduct } from "@/types";
+import { useProductQuery, useProductsQuery } from "@/redux/api/productApi";
 
 const ProductPage = () => {
   const query: Record<string, any> = {};
@@ -45,32 +46,20 @@ const ProductPage = () => {
     query["searchTerm"] = debouncedSearchTerm;
   }
 
-  const { data, isLoading } = useVarientsQuery({ page: 1, limit: 10 });
+  const { data, isLoading } = useProductsQuery({ ...query });
+  console.log(`proeduct data from products page`, data);
   const [deleteCategory] = useDeleteCategoryMutation();
-  const categories = data?.varients;
+  const products = data?.products;
   const meta = data?.meta;
 
   const columns = [
     {
       title: "Product Name",
-      dataIndex: "product",
-      render: function (data: any) {
-        const productName = data?.name
-        return <>{productName}</>;
-      },
-      
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
+      dataIndex: "name",
     },
     {
       title: "SKU",
       dataIndex: "sku",
-    },
-    {
-      title: "Quantity",
-      dataIndex: "qty",
     },
     {
       title: "Action",
@@ -174,7 +163,7 @@ const ProductPage = () => {
       <SETable
         loading={isLoading}
         columns={columns}
-        dataSource={categories}
+        dataSource={products}
         pageSize={size}
         totalPages={meta?.total}
         showSizeChanger={true}

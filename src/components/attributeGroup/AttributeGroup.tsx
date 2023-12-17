@@ -16,7 +16,6 @@ const AttributeGroupPage = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
     try {
-      console.log(data);
       const res = await addAttributeGroup(data).unwrap();
 
       if(res?.id){

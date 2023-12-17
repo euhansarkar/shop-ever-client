@@ -87,8 +87,8 @@ const ProductEditionPage = ({ params }: any) => {
             link: `/admin/catalog/product`,
           },
           {
-            label: "create",
-            link: `/admin/catalog/product/create`,
+            label: "edit",
+            link: `/admin/catalog/product/edit/${params.id}`,
           },
         ]}
       />
