@@ -94,19 +94,6 @@ export interface ICategory {
     Meta_SEO: IMetaSEO;
 }
 
-export interface IVarient {
-    id: string;
-    name: string;
-    description: string;
-    sku: string;
-    manage_stock: boolean;
-    stock_availability: boolean;
-    tax_class: boolean;
-    attribute_group_id: string;
-    category_id: string;
-    meta_seo: IMetaSEO
-}
-
 export interface IVarientOption {
     id: string;
     attribute_name: string;
@@ -126,6 +113,7 @@ export type IVariant = {
     created_at: string;
     updated_at: string;
     varient_options: IVarientOption[];
+    images: IImage[];
 }
 
 export type IProduct = {
@@ -146,3 +134,13 @@ export type IProduct = {
     meta_SEO: IMetaSEO;
     varients: IVariant[];
 };
+
+export interface ICartProduct {
+    id: string;
+    name: string;
+    sku: string;
+    meta_SEO_id: string;
+    attribute_group_id: string;
+    category_id: string;
+    varient: IVariant;
+}

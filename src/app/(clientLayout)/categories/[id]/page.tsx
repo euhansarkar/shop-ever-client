@@ -58,13 +58,6 @@ const CategoriesPage = ({ params }: any) => {
 
   const products = productsData?.products;
 
-  console.log(`products`, products);
-
-  const items1: MenuProps["items"] = ["1", "2", "3"].map((key) => ({
-    key,
-    label: `nav ${key}`,
-  }));
-
   const items2: MenuProps["items"] = [
     UserOutlined,
     LaptopOutlined,
@@ -96,9 +89,6 @@ const CategoriesPage = ({ params }: any) => {
       <Layout>
         <Layout>
           <Sider
-            // collapsible
-            // collapsed={collapsed}
-            // onCollapse={(value) => setCollapsed(value)}
             width={280}
             style={{
               overflow: "auto",
@@ -142,44 +132,45 @@ const CategoriesPage = ({ params }: any) => {
               }}
             >
               Content
-              <Row justify="center" align="middle">
-                {products?.map((product) => (
-                  <Col
-                    style={{ margin: "12px" }}
-                    key={product.id}
-                    xs={24}
-                    sm={12}
-                    md={8}
-                    lg={6}
-                  >
-                    <Card
-                      hoverable
-                      style={{ width: "100%", padding: "20px" }}
-                      // cover={
-                      //   category.images[0] &&
-                      //   typeof category.images[0].image_url === "string" ? (
-                      //     <img
-                      //       alt="example"
-                      //       src={category.images[0].image_url}
-                      //       height={340}
-                      //     />
-                      //   ) : (
-                      //     <div>No Image</div>
-                      //   )
-                      // }
+              <Row align="middle">
+                {products?.map((product) => {
+                  const getFirstVarient = product?.varients[0];
+                  const { images, price, qty } = getFirstVarient;
+                  console.log(`from product category`, product);
+                  console.log(`first varient`, getFirstVarient);
+                  return (
+                    <Col
+                      style={{ margin: "12px" }}
+                      key={product.id}
+                      xs={24}
+                      sm={12}
+                      md={8}
+                      lg={6}
                     >
-                      <Meta
-                        title={product.name}
-                        description={product.description}
-                      />
-                      {/* <Link href={`/categories/${category.name}`}>
-                        <Button style={{ margin: "10px 0" }} type="primary">
-                          Shop {category?.name}
-                        </Button>
-                      </Link> */}
-                    </Card>
-                  </Col>
-                ))}
+                      <Link href={`/categories/${id}/${product?.id}`}>
+                        <Card
+                          hoverable
+                          style={{ width: "100%", padding: "20px" }}
+                          cover={
+                            images[0] &&
+                            typeof images[0].image_url === "string" ? (
+                              <img
+                                alt="example"
+                                src={images[0].image_url}
+                                height={250}
+                                width={400}
+                              />
+                            ) : (
+                              <div>No Image</div>
+                            )
+                          }
+                        >
+                          <Meta title={product.name} description={price} />
+                        </Card>
+                      </Link>
+                    </Col>
+                  );
+                })}
               </Row>
             </Content>
           </Layout>

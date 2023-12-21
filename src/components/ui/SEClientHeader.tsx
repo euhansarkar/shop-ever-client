@@ -10,6 +10,8 @@ import {
   Space,
   Grid,
   Divider,
+  Drawer,
+  Badge,
 } from "antd";
 import {
   MenuOutlined,
@@ -25,11 +27,23 @@ import img from "@/assets/logo.png";
 import { useCategoriesQuery } from "@/redux/api/categoryApi";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import SECart from "../cart/SECart";
 const { Header: AntHeader } = Layout;
 
 const SEClientHeader = () => {
   const { useBreakpoint } = Grid;
   const { lg, md, sm } = useBreakpoint();
+
+  // drawer control
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   const router = useRouter();
   const query: Record<string, any> = {};
@@ -129,22 +143,12 @@ const SEClientHeader = () => {
             gap: "14px",
           }}
         >
-          <a>
-            <Space wrap size={10}>
-              <Avatar
-                size={sm ? "default" : "small"}
-                icon={<SearchOutlined />}
-              />
-            </Space>
-          </a>
+          <Space wrap size={10}>
+            <Avatar size={sm ? "default" : "small"} icon={<SearchOutlined />} />
+          </Space>
 
           <Space wrap size={10}>
-            <Link href={`/cart`}>
-              <Avatar
-                size={sm ? "default" : "small"}
-                icon={<ShoppingOutlined />}
-              />
-            </Link>
+            <SECart onClose={onClose} showDrawer={showDrawer} open={open} />
           </Space>
 
           <Dropdown menu={{ items }}>

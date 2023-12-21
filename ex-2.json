@@ -1,15 +1,101 @@
-"product_attributes": [
-  {
-      "attribute_id": "13afada5-ebbb-420b-b057-e78db8b677f6",
-      "product_attribute_values": [
-          {
-              "attribute_option_id": "dae87c66-5c2f-4c30-a577-25ea0def2d01",
-              "extra_price": 5.99
-          },
-          {
-              "attribute_option_id": "48fcd7a1-fdb0-407a-a225-0261590306ea",
-              "extra_price": 8.99
-          }
+{
+  "varients": 
+  [
+    {
+      "id": "de247b71-ebe5-4577-a5c9-91f3c967a8b0",
+      "sku": "diaper-sei-red",
+      "qty": 232,
+      "price": 423,
+      "weight": 243,
+      "status": true,
+      "visibility": true,
+      "product_id": "06096f6b-0f0e-4dfc-9576-340e5bc67c73",
+      "created_at": "2023-12-17T13:02:31.224Z",
+      "updated_at": "2023-12-17T13:02:31.224Z",
+      "varient_options": [
+        {
+          "id": "ceb20b98-77bd-4048-ba15-43e9aa898c4a",
+          "attribute_name": "color",
+          "option_id": "1738930b-9971-4b45-a880-41664e55198f",
+          "varient_id": "de247b71-ebe5-4577-a5c9-91f3c967a8b0"
+        }
+      ],
+      "images": [
+        {
+          "id": "2ade4945-8c22-4f48-abf3-e24000cb9e43",
+          "image_url": "https://res.cloudinary.com/df916o3vt/image/upload/v1702818151/kc0zcxw863xbiomiqoqt.jpg",
+          "category_id": null,
+          "product_id": null,
+          "isDeleted": null,
+          "created_at": "2023-12-17T13:02:31.224Z",
+          "updated_at": "2023-12-17T13:02:31.224Z",
+          "varient_id": "de247b71-ebe5-4577-a5c9-91f3c967a8b0"
+        }
       ]
-  }
-]
+    },
+    {
+      "id": "90b94a14-5f3b-45d9-a27a-233b16220d4b",
+      "sku": "diaper-sei-blue",
+      "qty": 23424,
+      "price": 234,
+      "weight": 2432,
+      "status": true,
+      "visibility": true,
+      "product_id": "06096f6b-0f0e-4dfc-9576-340e5bc67c73",
+      "created_at": "2023-12-17T13:03:26.633Z",
+      "updated_at": "2023-12-17T13:03:26.633Z",
+      "varient_options": [
+        {
+          "id": "cd4c5885-7e58-4b6c-903f-5b1bdaebb93f",
+          "attribute_name": "color",
+          "option_id": "28d55311-2981-467c-8b82-0e208aa83de1",
+          "varient_id": "90b94a14-5f3b-45d9-a27a-233b16220d4b"
+        }
+      ],
+      "images": [
+        {
+          "id": "845a5eb2-4cb6-4936-8c25-f789ce29f4e6",
+          "image_url": "https://res.cloudinary.com/df916o3vt/image/upload/v1702818207/o8ibh2qkwsii1wymyvup.jpg",
+          "category_id": null,
+          "product_id": null,
+          "isDeleted": null,
+          "created_at": "2023-12-17T13:03:26.633Z",
+          "updated_at": "2023-12-17T13:03:26.633Z",
+          "varient_id": "90b94a14-5f3b-45d9-a27a-233b16220d4b"
+        }
+      ]
+    },
+    {
+      "id": "14076802-98d6-4ad5-8ed7-469bce2c48a1",
+      "sku": "diaper-sei-yellow",
+      "qty": 23,
+      "price": 4254,
+      "weight": 423,
+      "status": true,
+      "visibility": true,
+      "product_id": "06096f6b-0f0e-4dfc-9576-340e5bc67c73",
+      "created_at": "2023-12-17T13:04:08.298Z",
+      "updated_at": "2023-12-17T13:04:08.298Z",
+      "varient_options": [
+        {
+          "id": "2d6927a3-c9dd-4eba-bda3-a7b8ece861a1",
+          "attribute_name": "color",
+          "option_id": "94054699-f331-4a3f-b4e5-ca2b49d595b9",
+          "varient_id": "14076802-98d6-4ad5-8ed7-469bce2c48a1"
+        }
+      ],
+      "images": [
+        {
+          "id": "4dfbf534-ff0d-439b-ac0b-d56840ab6415",
+          "image_url": "https://res.cloudinary.com/df916o3vt/image/upload/v1702818248/q8beab0hfl7arl9i1tuv.jpg",
+          "category_id": null,
+          "product_id": null,
+          "isDeleted": null,
+          "created_at": "2023-12-17T13:04:08.298Z",
+          "updated_at": "2023-12-17T13:04:08.298Z",
+          "varient_id": "14076802-98d6-4ad5-8ed7-469bce2c48a1"
+        }
+      ]
+    }
+  ]
+}
