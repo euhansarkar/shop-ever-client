@@ -1,8 +1,10 @@
 import { baseApi } from "./api/baseApi";
-import { radioSlice } from "./features/radio/radioSlice";
+import selectReducer from './features/varientOption/selectSlice';
+import cartReducer from './features/cart/cartSlice';
 
 export const reducer = {
-    radio: radioSlice.reducer,
+    cart: cartReducer,
+    select: selectReducer,
     [baseApi.reducerPath]: baseApi.reducer
 }
 

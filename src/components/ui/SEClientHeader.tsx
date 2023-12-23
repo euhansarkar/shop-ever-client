@@ -9,9 +9,6 @@ import {
   Row,
   Space,
   Grid,
-  Divider,
-  Drawer,
-  Badge,
 } from "antd";
 import {
   MenuOutlined,
@@ -25,14 +22,14 @@ import { AUTH_KEY } from "@/constants/storageKey";
 import Image from "next/image";
 import img from "@/assets/logo.png";
 import { useCategoriesQuery } from "@/redux/api/categoryApi";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import SECart from "../cart/SECart";
 const { Header: AntHeader } = Layout;
 
 const SEClientHeader = () => {
   const { useBreakpoint } = Grid;
-  const { lg, md, sm } = useBreakpoint();
+  const { md, sm } = useBreakpoint();
 
   // drawer control
   const [open, setOpen] = useState(false);

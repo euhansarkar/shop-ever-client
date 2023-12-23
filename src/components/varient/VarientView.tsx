@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from "react";
-import SETable from "../ui/SETable";
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import Link from "next/link";
-import { Button, Col, Row, message } from "antd";
-import { useDebounced } from "@/redux/hooks";
+import { useAttributeGroupQuery } from "@/redux/api/attributeGroupApi";
+import { useProductQuery } from "@/redux/api/productApi";
 import {
   useUpdateVarientMutation,
   useVarientQuery,
   useVarientsQuery,
 } from "@/redux/api/varientApi";
-import SEMultipleUpload from "../ui/SEMultipleUpload";
-import SESwitch from "../ui/SESwitch";
-import FormInputNumber from "../Forms/FormInputNumber";
-import FormInput from "../Forms/FormInput";
-import Form from "../Forms/Form";
-import SEVarientModal from "./SEVarientModal";
-import { useAttributeGroupQuery } from "@/redux/api/attributeGroupApi";
-import { useProductQuery } from "@/redux/api/productApi";
-import FormSelectField from "../Forms/FormSelectField";
+import { useDebounced } from "@/redux/hook";
 import { IAttribute } from "@/types";
-import { IVarientOption } from "../../types/common";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, Col, Row, message } from "antd";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import Form from "../Forms/Form";
+import FormInput from "../Forms/FormInput";
+import FormInputNumber from "../Forms/FormInputNumber";
+import FormSelectField from "../Forms/FormSelectField";
+import SESwitch from "../ui/SESwitch";
+import SETable from "../ui/SETable";
 import SEUpload from "../ui/SEUpload";
+import SEVarientModal from "./SEVarientModal";
 
 const VarientView = ({ id }: { id: string }) => {
   const query: Record<string, any> = {};

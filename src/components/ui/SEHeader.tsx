@@ -45,11 +45,9 @@ const SEHeader = () => {
           {role}
         </p>
         <Dropdown menu={{ items }}>
-          <a>
-            <Space wrap size={16}>
-              <Avatar size="large" icon={<UserOutlined />} />
-            </Space>
-          </a>
+          <Space wrap size={16}>
+            <Avatar size="large" icon={<UserOutlined />} />
+          </Space>
         </Dropdown>
       </Row>
     </AntHeader>

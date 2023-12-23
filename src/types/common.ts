@@ -135,6 +135,37 @@ export type IProduct = {
     varients: IVariant[];
 };
 
+export interface IVarientOptionCore extends IVarientOption {
+    options: {
+        id: string;
+        option_text: string;
+        attribute_id: string;
+        is_deleted: boolean;
+        created_at: string;
+        updated_at: string;
+    }
+}
+
+
+export type ISelectSlice = {
+    [key: string]: {
+        id: string;
+        attribute_name: string;
+        option_id: string;
+        varient_id: string;
+        options: {
+            id: string;
+            option_text: string;
+            attribute_id: string;
+            is_deleted: boolean;
+            created_at: string;
+            updated_at: string;
+        };
+    };
+};
+
+
+
 export interface ICartProduct {
     id: string;
     name: string;
@@ -142,5 +173,8 @@ export interface ICartProduct {
     meta_SEO_id: string;
     attribute_group_id: string;
     category_id: string;
-    varient: IVariant;
+    varients: ISelectSlice;
+    quantity?: number;
+    price: number;
+    img: string;
 }

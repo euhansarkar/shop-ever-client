@@ -1,6 +1,13 @@
 "use client";
 import ActionBar from "@/components/ui/ActionBar";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
+import SEModal from "@/components/ui/SEModal";
+import SETable from "@/components/ui/SETable";
+import {
+  useCategoriesQuery,
+  useDeleteCategoryMutation,
+} from "@/redux/api/categoryApi";
+import { useDebounced } from "@/redux/hook";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -9,14 +16,7 @@ import {
 } from "@ant-design/icons";
 import { Button, message } from "antd";
 import Link from "next/link";
-import React, { useState } from "react";
-import { useDebounced } from "@/redux/hooks";
-import SEModal from "@/components/ui/SEModal";
-import SETable from "@/components/ui/SETable";
-import {
-  useCategoriesQuery,
-  useDeleteCategoryMutation,
-} from "@/redux/api/categoryApi";
+import { useState } from "react";
 
 const CategoryPage = () => {
   const query: Record<string, any> = {};
@@ -53,7 +53,6 @@ const CategoryPage = () => {
       title: "Category Name",
       dataIndex: "name",
       sorter: true,
-      
     },
     {
       title: "Status",

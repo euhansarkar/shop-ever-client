@@ -11,7 +11,7 @@ interface IInput {
   id?: string;
   placeholder?: string;
   validation?: object;
-  label?: string;
+  label: string;
   required?: boolean;
   styles?: CSSProperties;
   addonBefore?: ReactNode | ReactElement;

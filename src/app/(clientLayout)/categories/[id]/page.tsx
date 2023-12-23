@@ -1,18 +1,18 @@
 "use client";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
-import React, { useEffect, useState } from "react";
+import { useCategoryQuery } from "@/redux/api/categoryApi";
+import { useProductsQuery } from "@/redux/api/productApi";
+import { useDebounced } from "@/redux/hook";
 import {
   LaptopOutlined,
   NotificationOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Button, Card, Col, Layout, Menu, Row, theme } from "antd";
-import { useCategoryQuery } from "@/redux/api/categoryApi";
-import { useProductsQuery } from "@/redux/api/productApi";
-import { useDebounced } from "@/redux/hooks";
-import Link from "next/link";
+import { Card, Col, Image, Layout, Menu, Row, theme } from "antd";
 import Meta from "antd/es/card/Meta";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 const { Header, Content, Sider } = Layout;
 
@@ -154,7 +154,7 @@ const CategoriesPage = ({ params }: any) => {
                           cover={
                             images[0] &&
                             typeof images[0].image_url === "string" ? (
-                              <img
+                              <Image
                                 alt="example"
                                 src={images[0].image_url}
                                 height={250}

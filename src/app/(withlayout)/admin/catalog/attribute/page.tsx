@@ -1,15 +1,23 @@
 "use client";
 import ActionBar from "@/components/ui/ActionBar";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
-import { useAttributesQuery, useDeleteAttributeMutation } from "@/redux/api/attributeApi";
-import { DeleteOutlined, EditOutlined, EyeOutlined, ReloadOutlined } from "@ant-design/icons";
-import { Button, message } from "antd";
-import Link from "next/link";
-import React, { useState } from "react";
-import { useDebounced } from "@/redux/hooks";
 import SEModal from "@/components/ui/SEModal";
 import SETable from "@/components/ui/SETable";
+import {
+  useAttributesQuery,
+  useDeleteAttributeMutation,
+} from "@/redux/api/attributeApi";
+import { useDebounced } from "@/redux/hook";
 import { IAttributeGroup } from "@/types";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  ReloadOutlined,
+} from "@ant-design/icons";
+import { Button, message } from "antd";
+import Link from "next/link";
+import { useState } from "react";
 
 const AttributePage = () => {
   const query: Record<string, any> = {};
@@ -36,7 +44,7 @@ const AttributePage = () => {
     query["searchTerm"] = debouncedSearchTerm;
   }
 
-  const { data, isLoading } = useAttributesQuery({...query});
+  const { data, isLoading } = useAttributesQuery({ ...query });
   const [deleteAttribute] = useDeleteAttributeMutation();
   const attributes = data?.attributes;
   const meta = data?.meta;
@@ -45,12 +53,12 @@ const AttributePage = () => {
     {
       title: "Attribute Name",
       dataIndex: "attribute_name",
-      sorter: true
+      sorter: true,
     },
     {
       title: "Attribute Code",
       dataIndex: "attribute_code",
-      sorter: true
+      sorter: true,
     },
     {
       title: "Attribute Group Name",
@@ -64,7 +72,7 @@ const AttributePage = () => {
     {
       title: "Attribute Type",
       dataIndex: "type",
-      sorter: true
+      sorter: true,
     },
     {
       title: "Is Required?",
@@ -73,7 +81,7 @@ const AttributePage = () => {
         const requiredType = data ? "Yes" : "No";
         return <>{requiredType}</>;
       },
-      sorter: true
+      sorter: true,
     },
     {
       title: "Is Filterable?",
@@ -82,7 +90,7 @@ const AttributePage = () => {
         const filterAbleType = data ? "Yes" : "No";
         return <>{filterAbleType}</>;
       },
-      sorter: true
+      sorter: true,
     },
     {
       title: "Action",
@@ -118,7 +126,6 @@ const AttributePage = () => {
               <DeleteOutlined />
             </Button>
           </>
-
         );
       },
     },
@@ -143,7 +150,6 @@ const AttributePage = () => {
   };
 
   const deleteOne = async (id: string) => {
-    
     try {
       console.log(id);
       const res = await deleteAttribute(id);
@@ -175,14 +181,14 @@ const AttributePage = () => {
           <Button type="primary">create attribute</Button>
         </Link>
         {(!!sortBy || !!sortOrder || !!searchTerm) && (
-            <Button
-              onClick={resetFilters}
-              type="primary"
-              style={{ margin: "0px 5px" }}
-            >
-              <ReloadOutlined />
-            </Button>
-          )}
+          <Button
+            onClick={resetFilters}
+            type="primary"
+            style={{ margin: "0px 5px" }}
+          >
+            <ReloadOutlined />
+          </Button>
+        )}
       </ActionBar>
 
       <SETable

@@ -105,11 +105,11 @@ const SEClientHeader = () => {
             gap: "14px",
           }}
         >
-          <a>
+          
             <Space wrap size={10}>
               <Avatar size="large" icon={<SearchOutlined />} />
             </Space>
-          </a>
+          
 
           <Space wrap size={10}>
             <Link href={`/cart`}>
