@@ -2,14 +2,13 @@
 import { Select } from "antd";
 import { useFormContext, Controller } from "react-hook-form";
 
-
 export type SelectOptions = {
   label: string;
   value: string;
 };
 
 type SelectFieldProps = {
-  options: SelectOptions[]
+  options: SelectOptions[];
   name: string;
   size?: "large" | "small" | "middle";
   value?: string | string[] | undefined;
@@ -22,7 +21,7 @@ type SelectFieldProps = {
   disabled?: boolean;
 };
 
-const FormSelectField = ({
+const FormSelectCountryField = ({
   name,
   size,
   value,
@@ -62,4 +61,4 @@ const FormSelectField = ({
   );
 };
 
-export default FormSelectField;
+export default FormSelectCountryField;

@@ -13,7 +13,7 @@ type RadioFieldProps = {
   options: RadioOptions[];
   size?: "large" | "middle" | "small";
   label?: string;
-  onValueChange: (value: string | undefined) => void; // New callback function
+  onValueChange: (value: string | undefined) => void; 
 };
 
 const FormRadioField = ({
@@ -33,8 +33,6 @@ const FormRadioField = ({
         name={name}
         render={({ field: {value,onChange} }) => (
           <Radio.Group
-            // onChange={handleChange ? handleChange : onChange}
-            // value={value}
             size={size}
             style={{ width: "100%" }}
             value={value}
