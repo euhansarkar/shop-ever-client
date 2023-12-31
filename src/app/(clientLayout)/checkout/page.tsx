@@ -6,7 +6,7 @@ import FormTextArea from "@/components/Forms/FormTextArea";
 import CheckoutCart from "@/components/cart/CheckoutCart";
 import FormSelectCountryField from "@/components/csc/FormSelectCountryField";
 import { useAppSelector } from "@/redux/hook";
-import { Col, Row } from "antd";
+import { Button, Col, Row } from "antd";
 import { City, Country, State } from "country-state-city";
 import { useState } from "react";
 
@@ -21,6 +21,8 @@ const CheckOutPage = () => {
   const [selectedCity, setSelectedCity] = useState<string | undefined>(
     undefined
   );
+
+  console.log(`selected city`, selectedCity);
 
   const { products, total } = useAppSelector((state) => state.cart);
 
@@ -45,16 +47,24 @@ const CheckOutPage = () => {
   // get cities
   const cities =
     selectedState &&
-    City.getAllCities()?.filter((e) => e.stateCode === selectedState);
+    City.getAllCities()?.filter(
+      (e) => e.countryCode === selectedCountry && e.stateCode === selectedState
+    );
   const myCityOptions =
     cities?.length! > 0 &&
     cities?.map((c) => ({
-      label: c.name,
-      value: c.isoCode,
+      label: c?.name,
+      value: c?.name,
     }));
+
+  console.log(`options`, cities);
 
   const handleOnSubmit = async (data: any) => {
     try {
+      data.country = selectedCountry;
+      data.state = selectedState;
+      data.city = selectedCity;
+
       console.log(data);
       // const res = await addProduct(data).unwrap();
       // console.log(res);
@@ -168,9 +178,7 @@ const CheckOutPage = () => {
                       name="state"
                       options={myStateOptions}
                       label="State"
-                      onSelectedValueChange={(value) =>
-                        setSelectedState(value)
-                      }
+                      onSelectedValueChange={(value) => setSelectedState(value)}
                       selectedValue={selectedState}
                       placeholder="Select State"
                     />
@@ -188,9 +196,11 @@ const CheckOutPage = () => {
                   <div style={{ margin: `10px 0px`, flexBasis: "50%" }}>
                     <FormSelectField
                       size="large"
-                      name="country"
+                      name="city"
                       options={myCityOptions}
                       label="City"
+                      onSelectedValueChange={(value) => setSelectedCity(value)}
+                      selectedValue={selectedCity}
                       placeholder="Select City"
                     />
                   </div>
@@ -207,11 +217,17 @@ const CheckOutPage = () => {
 
                 <div style={{ margin: "10px 0px" }}>
                   <FormTextArea
-                    name="city"
+                    name="location"
                     rows={5}
-                    placeholder="your city"
-                    label="City"
+                    placeholder="your location"
+                    label="Location"
                   />
+                </div>
+
+                <div style={{ margin: "10px 0px" }}>
+                  <Button type="primary" htmlType="submit">
+                    submit
+                  </Button>
                 </div>
               </div>
             </div>

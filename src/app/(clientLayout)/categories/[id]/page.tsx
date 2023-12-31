@@ -131,7 +131,6 @@ const CategoriesPage = ({ params }: any) => {
                 borderRadius: borderRadiusLG,
               }}
             >
-              Content
               <Row align="middle">
                 {products?.map((product) => {
                   const getFirstVarient = product?.varients[0];
@@ -158,7 +157,7 @@ const CategoriesPage = ({ params }: any) => {
                                 alt="example"
                                 src={images[0].image_url}
                                 height={250}
-                                width={400}
+                                width="100%"
                               />
                             ) : (
                               <div>No Image</div>
