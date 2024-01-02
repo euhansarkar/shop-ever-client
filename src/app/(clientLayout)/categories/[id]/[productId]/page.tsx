@@ -13,6 +13,9 @@ const ProductPage = ({ params }: any) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const des =
+    "<h1>hello world</h1><p>lorem ipsum doler sit amet what are you doing there</p>";
+
   // get product
   const { data: productData, isLoading: productLoading } =
     useProductQuery(productId);
@@ -62,11 +65,21 @@ const ProductPage = ({ params }: any) => {
 
             {/* second part */}
             <Col span={12} style={{ margin: "10px 0" }}>
-              <h1 style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+              <h1
+                style={{
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  margin: "10px 0",
+                }}
+              >
                 {productData?.name}
               </h1>
-              <h2>${getFirstVarient?.price}</h2>
-              <p style={{ color: "#656769" }}>sku: {getFirstVarient?.sku}</p>
+              <h2 style={{ margin: "10px 0" }}>
+                price: ${getFirstVarient?.price}
+              </h2>
+              <p style={{ color: "#656769", margin: "12px 0" }}>
+                sku: {getFirstVarient?.sku}
+              </p>
 
               <div>
                 {allVarientOptions?.length > 0 ? (
@@ -78,8 +91,9 @@ const ProductPage = ({ params }: any) => {
                   <p>Loading...</p>
                 )}
               </div>
-
-              <div>{productData?.description}</div>
+              <div
+                dangerouslySetInnerHTML={{ __html: productData?.description }}
+              />
             </Col>
           </Row>
         </div>

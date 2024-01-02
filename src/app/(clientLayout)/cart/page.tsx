@@ -15,8 +15,9 @@ const CartProductPage = () => {
             border: "1px solid #d9d9d9",
             borderRadius: "5px",
             padding: "15px",
-            marginBottom: "10px",
-            marginTop: "10px",
+            // marginBottom: "10px",
+            // marginTop: "10px",
+            margin: "10px 0 10px 10px",
           }}
         >
           <div>
@@ -38,8 +39,7 @@ const CartProductPage = () => {
             border: "1px solid #d9d9d9",
             borderRadius: "5px",
             padding: "15px",
-            marginBottom: "10px",
-            marginTop: "10px",
+            margin: "10px 0 10px 10px",
           }}
         >
           <div>
@@ -80,8 +80,7 @@ const CartProductPage = () => {
             border: "1px solid #d9d9d9",
             borderRadius: "5px",
             padding: "15px",
-            marginBottom: "10px",
-            marginTop: "10px",
+            margin: "10px 0 10px 10px",
           }}
         >
           <p
@@ -101,7 +100,7 @@ const CartProductPage = () => {
             }}
           >
             <span>sub total</span>
-            <span>$3s98s9</span>
+            <span>{total ? total : 0}</span>
           </div>
 
           <div
@@ -113,7 +112,7 @@ const CartProductPage = () => {
             }}
           >
             <span>total</span>
-            <span>3sgdsgs98s9</span>
+            <span>{total ? total : 0}</span>
           </div>
           <div
             style={{

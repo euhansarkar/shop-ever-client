@@ -4,11 +4,16 @@ import FormInput from "@/components/Forms/FormInput";
 import FormSelectField from "@/components/Forms/FormSelectField";
 import FormTextArea from "@/components/Forms/FormTextArea";
 import CheckoutCart from "@/components/cart/CheckoutCart";
+import CheckoutForm from "@/components/checkout/CheckoutForm";
 import FormSelectCountryField from "@/components/csc/FormSelectCountryField";
 import { useAppSelector } from "@/redux/hook";
 import { Button, Col, Row } from "antd";
 import { City, Country, State } from "country-state-city";
 import { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 const CheckOutPage = () => {
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
@@ -81,16 +86,15 @@ const CheckOutPage = () => {
   return (
     <Row gutter={{ xs: 24, xl: 8, lg: 8, md: 24 }}>
       <Col span={12} style={{ margin: "10px 0" }}>
-        <Form submitHandler={handleOnSubmit}>
-          <div
-            style={{
-              border: "1px solid #d9d9d9",
-              borderRadius: "5px",
-              padding: "15px",
-              marginBottom: "10px",
-              marginTop: "10px",
-            }}
-          >
+        <div
+          style={{
+            border: "1px solid #d9d9d9",
+            borderRadius: "5px",
+            padding: "15px",
+            margin: "10px 0 10px 10px",
+          }}
+        >
+          <Form submitHandler={handleOnSubmit}>
             <div>
               <p
                 style={{
@@ -134,22 +138,6 @@ const CheckOutPage = () => {
                     />
                   </div>
                 </div>
-                {/* <div style={{ margin: "10px 0px" }}>
-                  <FormInput
-                    type="text"
-                    name="name"
-                    size="large"
-                    label="Product Name"
-                  />
-                </div>
-                <div style={{ margin: "10px 0px" }}>
-                  <FormInput
-                    type="text"
-                    name="name"
-                    size="large"
-                    label="Product Name"
-                  />
-                </div> */}
 
                 <div
                   style={{
@@ -231,8 +219,30 @@ const CheckOutPage = () => {
                 </div>
               </div>
             </div>
+          </Form>
+        </div>
+        <div
+          style={{
+            border: "1px solid #d9d9d9",
+            borderRadius: "5px",
+            padding: "15px",
+            margin: "10px 0 10px 10px",
+          }}
+        >
+          <div>
+            <p
+              style={{
+                fontSize: "18px",
+                marginBottom: "10px",
+              }}
+            >
+              General
+            </p>
+            <Elements stripe={stripePromise}>
+              <CheckoutForm />
+            </Elements>
           </div>
-        </Form>
+        </div>
       </Col>
 
       {/* second col */}
@@ -259,59 +269,6 @@ const CheckOutPage = () => {
             <CheckoutCart products={products} />
           </div>
         </div>
-        {/* <div
-          style={{
-            border: "1px solid #d9d9d9",
-            borderRadius: "5px",
-            padding: "15px",
-            marginBottom: "10px",
-            marginTop: "10px",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "18px",
-              marginBottom: "10px",
-            }}
-          >
-            Total Summery
-          </p>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <span>sub total</span>
-            <span>$3s98s9</span>
-          </div>
-
-          <div
-            style={{
-              marginTop: "22px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <span>total</span>
-            <span>3sgdsgs98s9</span>
-          </div>
-          <div
-            style={{
-              marginTop: "22px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Link href={`/checkout`}>
-              <Button type="primary">Checkout</Button>
-            </Link>
-          </div>
-        </div> */}
       </Col>
     </Row>
   );
