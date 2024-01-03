@@ -38,7 +38,6 @@ const AttributeCreationPage = () => {
 
   const handleOnSubmit = async (data: any) => {
     try {
-      console.log(data);
       const res = await addAttribute(data).unwrap();
       console.log(res);
 

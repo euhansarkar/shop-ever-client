@@ -1,14 +1,50 @@
+import { usePaymentIntentMutation } from "@/redux/api/paymentApi";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { Button } from "antd";
+import { FormEvent, useEffect, useState } from "react";
 
-const CheckoutForm = () => {
+const CheckoutForm = (price: { price: number }) => {
+  const [paymentIntent] = usePaymentIntentMutation();
+  const [stripeCardError, setStripeCardError] = useState<string>("");
   const stripe = useStripe();
   const elements = useElements();
 
-  const handleSubmit = async (event) => {
+  useEffect(() => {
+    const createPaymentIntent = async () => {
+      try {
+        const response = await paymentIntent(price);
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    createPaymentIntent();
+  }, [price, paymentIntent]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    console.log(`hello world`);
     event.preventDefault();
 
     if (!stripe || !elements) {
       return;
+    }
+
+    const card = elements.getElement(CardElement);
+    if (!card) {
+      return;
+    }
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card,
+    });
+
+    if (error) {
+      console.log(error);
+      setStripeCardError(error?.message!);
+    } else {
+      setStripeCardError("");
     }
   };
 
@@ -31,10 +67,16 @@ const CheckoutForm = () => {
             },
           }}
         />
-        <button type="submit" disabled={!stripe}>
+        <Button
+          style={{ margin: "10px 0 0 0" }}
+          type="primary"
+          htmlType="submit"
+          disabled={!stripe}
+        >
           Pay
-        </button>
+        </Button>
       </form>
+      {stripeCardError && <p style={{ color: "red" }}>{stripeCardError}</p>}
     </div>
   );
 };

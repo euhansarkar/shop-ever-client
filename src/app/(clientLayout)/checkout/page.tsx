@@ -239,7 +239,7 @@ const CheckOutPage = () => {
               General
             </p>
             <Elements stripe={stripePromise}>
-              <CheckoutForm />
+              <CheckoutForm price={total} />
             </Elements>
           </div>
         </div>
