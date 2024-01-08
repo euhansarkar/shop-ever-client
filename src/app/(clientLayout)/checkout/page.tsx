@@ -1,247 +1,81 @@
 "use client";
-import Form from "@/components/Forms/Form";
-import FormInput from "@/components/Forms/FormInput";
-import FormSelectField from "@/components/Forms/FormSelectField";
-import FormTextArea from "@/components/Forms/FormTextArea";
 import CheckoutCart from "@/components/cart/CheckoutCart";
-import CheckoutForm from "@/components/checkout/CheckoutForm";
-import FormSelectCountryField from "@/components/csc/FormSelectCountryField";
+import BillingAddrss from "@/components/checkout/BillingAddrss";
+import PaymentMethod from "@/components/checkout/PaymentMethod";
+import ShippingAddrss from "@/components/checkout/ShippingAddrss";
+import ShippingMethod from "@/components/checkout/ShippingMethod";
+import StepperForm from "@/components/stepper/FormStepper";
+import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
+import { CHECKOUT_STEPPER_PERSIST_KEY } from "@/constants/storageKey";
 import { useAppSelector } from "@/redux/hook";
-import { Button, Col, Row } from "antd";
-import { City, Country, State } from "country-state-city";
-import { useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
+import { Col, Divider, Row } from "antd";
 
 const CheckOutPage = () => {
-  const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
-    undefined
-  );
-  const [selectedState, setSelectedState] = useState<string | undefined>(
-    undefined
-  );
-
-  const [selectedCity, setSelectedCity] = useState<string | undefined>(
-    undefined
-  );
-
-  console.log(`selected city`, selectedCity);
-
   const { products, total } = useAppSelector((state) => state.cart);
 
-  // get countries
-  const countries = Country?.getAllCountries();
-  const countriesOptions = countries?.map((c) => ({
-    label: c?.name,
-    value: c?.isoCode,
-  }));
+  const steps = [
+    {
+      title: "Shipping Info",
+      content: <ShippingAddrss />,
+    },
+    {
+      title: "Shipping Method",
+      content: <ShippingMethod />,
+    },
+    {
+      title: "Billing Address",
+      content: <BillingAddrss />,
+    },
+    {
+      title: "Payment",
+      content: <PaymentMethod />,
+    },
+  ];
 
-  // get states
-  const states =
-    selectedCountry &&
-    State.getAllStates()?.filter((e) => e.countryCode === selectedCountry);
-  const myStateOptions =
-    states?.length! > 0 &&
-    states?.map((c) => ({
-      label: c?.name,
-      value: c?.isoCode,
-    }));
-
-  // get cities
-  const cities =
-    selectedState &&
-    City.getAllCities()?.filter(
-      (e) => e.countryCode === selectedCountry && e.stateCode === selectedState
-    );
-  const myCityOptions =
-    cities?.length! > 0 &&
-    cities?.map((c) => ({
-      label: c?.name,
-      value: c?.name,
-    }));
-
-  console.log(`options`, cities);
-
-  const handleOnSubmit = async (data: any) => {
+  const handleStudentSubmit = async (values: any) => {
+    console.log(`get values`, values);
+    // const obj = { ...values };
+    // const file = obj["file"];
+    // delete obj["file"];
+    // const data = JSON.stringify(obj);
+    // const formData = new FormData();
+    // formData.append("file", file as Blob);
+    // formData.append("data", data);
+    // message.loading("Creating...");
     try {
-      data.country = selectedCountry;
-      data.state = selectedState;
-      data.city = selectedCity;
-
-      console.log(data);
-      // const res = await addProduct(data).unwrap();
-      // console.log(res);
-
-      // if (res?.id) {
-      //   message.success(`product created successfully`);
-      //   router.push(`/admin/catalog/product/create/add-varient/${res?.id}`);
+      // const res = await addStudentWithFormData(formData);
+      // if (!!res) {
+      //   message.success("Student created successfully!");
       // }
-    } catch (error: any) {
-      console.error(error.message);
+    } catch (err: any) {
+      console.error(err.message);
     }
   };
 
   return (
     <Row gutter={{ xs: 24, xl: 8, lg: 8, md: 24 }}>
       <Col span={12} style={{ margin: "10px 0" }}>
-        <div
-          style={{
-            border: "1px solid #d9d9d9",
-            borderRadius: "5px",
-            padding: "15px",
-            margin: "10px 0 10px 10px",
-          }}
-        >
-          <Form submitHandler={handleOnSubmit}>
-            <div>
-              <p
-                style={{
-                  fontSize: "18px",
-                  marginBottom: "10px",
-                }}
-              >
-                General
-              </p>
-              <div>
-                <div style={{ margin: "10px 0px" }}>
-                  <FormInput
-                    type="text"
-                    name="name"
-                    size="large"
-                    label="Full Name"
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "10px",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
-                    <FormInput
-                      type="text"
-                      name="phone_number_1"
-                      size="large"
-                      label="Mobile Number"
-                    />
-                  </div>
-                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
-                    <FormInput
-                      type="text"
-                      name="phone_number_2"
-                      size="large"
-                      label="Alternative Mobile Number"
-                    />
-                  </div>
-                </div>
+        <div>
+          <SEBreadCrumb
+            items={[
+              {
+                label: `Home`,
+                link: `/home`,
+              },
+              {
+                label: `Checkout`,
+                link: `/checkout`,
+              },
+            ]}
+          />
 
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "10px",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div style={{ margin: `10px 0px`, flexBasis: "50%" }}>
-                    <FormSelectCountryField
-                      size="large"
-                      name="country"
-                      options={countriesOptions}
-                      label="Country"
-                      placeholder="Select Country"
-                      onSelectedValueChange={(value) =>
-                        setSelectedCountry(value)
-                      }
-                      selectedValue={selectedCountry}
-                    />
-                  </div>
-                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
-                    <FormSelectField
-                      size="large"
-                      name="state"
-                      options={myStateOptions}
-                      label="State"
-                      onSelectedValueChange={(value) => setSelectedState(value)}
-                      selectedValue={selectedState}
-                      placeholder="Select State"
-                    />
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "10px",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div style={{ margin: `10px 0px`, flexBasis: "50%" }}>
-                    <FormSelectField
-                      size="large"
-                      name="city"
-                      options={myCityOptions}
-                      label="City"
-                      onSelectedValueChange={(value) => setSelectedCity(value)}
-                      selectedValue={selectedCity}
-                      placeholder="Select City"
-                    />
-                  </div>
-                  <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
-                    <FormSelectField
-                      size="large"
-                      name="state"
-                      options={countriesOptions}
-                      label="State"
-                      placeholder="Select State"
-                    />
-                  </div>
-                </div>
-
-                <div style={{ margin: "10px 0px" }}>
-                  <FormTextArea
-                    name="location"
-                    rows={5}
-                    placeholder="your location"
-                    label="Location"
-                  />
-                </div>
-
-                <div style={{ margin: "10px 0px" }}>
-                  <Button type="primary" htmlType="submit">
-                    submit
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Form>
-        </div>
-        <div
-          style={{
-            border: "1px solid #d9d9d9",
-            borderRadius: "5px",
-            padding: "15px",
-            margin: "10px 0 10px 10px",
-          }}
-        >
-          <div>
-            <p
-              style={{
-                fontSize: "18px",
-                marginBottom: "10px",
-              }}
-            >
-              General
-            </p>
-            <Elements stripe={stripePromise}>
-              <CheckoutForm price={total} />
-            </Elements>
-          </div>
+          <StepperForm
+            persistKey={CHECKOUT_STEPPER_PERSIST_KEY}
+            submitHandler={(value) => {
+              handleStudentSubmit(value);
+            }}
+            steps={steps}
+          />
         </div>
       </Col>
 
@@ -265,8 +99,45 @@ const CheckOutPage = () => {
             >
               Products
             </p>
-
             <CheckoutCart products={products} />
+            <div style={{ paddingLeft: "10px", paddingRight: "20px" }}>
+              <div
+                style={{
+                  marginTop: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>sub total</span>
+                <span>{total ? total : 0}</span>
+              </div>
+
+              <div
+                style={{
+                  marginTop: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>Discount</span>
+                <span>{total ? 0 : 0}</span>
+              </div>
+
+              <Divider />
+              <div
+                style={{
+                  marginTop: "22px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>total</span>
+                <span>{total ? total : 0}</span>
+              </div>
+            </div>
           </div>
         </div>
       </Col>

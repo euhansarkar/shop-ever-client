@@ -45,6 +45,34 @@ export const filterableOptions = [
     }
 ];
 
+
+export const shippingMethodOptions = [
+    {
+        label: "Free Delivery - $0.00",
+        value: "free",
+    },
+    {
+        label: "Standard Delivery - $5.00",
+        value: "standard",
+    },
+    {
+        label: "Express Delivery - $15.00",
+        value: "express",
+    },
+];
+
+
+export const paymentMethodOptions = [
+    {
+        label: "Visa / Master Card",
+        value: "card",
+    },
+    {
+        label: "Cash On Delivery",
+        value: "cashon",
+    }
+];
+
 export const daysOptions = [
     {
         label: "saturday",

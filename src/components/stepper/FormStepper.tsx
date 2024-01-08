@@ -1,22 +1,20 @@
 "use client";
 
-import { useAttributesQuery } from "@/redux/api/attributeApi";
+import _ from "lodash";
+import { addCheckoutData } from "@/redux/features/checkout/checkoutSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { getFromLocalStorage, setToLocalStorage } from "@/utils/localStorage";
 import { Button, message, Steps } from "antd";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-
-interface IFormConfig {
-  defaultValues?: Record<string, any>;
-}
 
 interface ISteps {
   title?: string;
   content?: React.ReactElement | React.ReactNode;
 }
 
-interface IStepsProps extends IFormConfig {
+interface IStepsProps {
   steps: ISteps[];
   persistKey: string;
   submitHandler: (el: any) => void;
@@ -28,21 +26,20 @@ const StepperForm = ({
   submitHandler,
   navigateLink,
   persistKey,
-  defaultValues,
 }: IStepsProps) => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
-  // default value set
-  const formConfig: IFormConfig = {};
+  // let's get checkout data
+  const stepData = useAppSelector((state) => state.checkout);
 
-  if (!!defaultValues) formConfig["defaultValues"] = defaultValues;
+  console.log(`get step data`, stepData);
 
   const [current, setCurrent] = useState<number>(
     !!getFromLocalStorage("step")
       ? Number(JSON.parse(getFromLocalStorage("step") as string).step)
       : 0
   );
-
   const [savedValues, setSavedValues] = useState(
     !!getFromLocalStorage(persistKey)
       ? JSON.parse(getFromLocalStorage(persistKey) as string)
@@ -63,15 +60,25 @@ const StepperForm = ({
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
-  const methods = useForm(formConfig);
+  // creating a deep copy of the savedValues
+  const deepCopy = JSON.parse(JSON.stringify(savedValues));
+  const methods = useForm({ defaultValues: deepCopy });
+
+  const { handleSubmit, reset } = methods;
+
   const watch = methods.watch();
 
+  useEffect(() => {
+    if (!_.isEqual(stepData, watch)) {
+      const copyWatch = watch ;
+      dispatch(addCheckoutData(copyWatch));
+    }
+  }, [persistKey, methods, watch, stepData, dispatch]);
 
   useEffect(() => {
     setToLocalStorage(persistKey, JSON.stringify(watch));
-  }, [watch, persistKey, methods]);
-
-  const { handleSubmit, reset } = methods;
+    console.log(`thi sis watch`, watch);
+  }, [persistKey, methods, watch]);
 
   const handleStudentOnSubmit = (data: any) => {
     submitHandler(data);
@@ -80,10 +87,6 @@ const StepperForm = ({
     setToLocalStorage(persistKey, JSON.stringify({}));
     navigateLink && router.push(navigateLink);
   };
-
-  useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, reset, methods]);
 
   return (
     <>

@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useState } from "react";
 
 const CheckoutForm = (price: { price: number }) => {
   const [paymentIntent] = usePaymentIntentMutation();
+  const [clientSecret, setClientSecret] = useState<string>("");
   const [stripeCardError, setStripeCardError] = useState<string>("");
   const stripe = useStripe();
   const elements = useElements();
@@ -14,6 +15,7 @@ const CheckoutForm = (price: { price: number }) => {
       try {
         const response = await paymentIntent(price);
         console.log(response);
+        setClientSecret(response?.data);
       } catch (error) {
         console.error(error);
       }
@@ -21,6 +23,8 @@ const CheckoutForm = (price: { price: number }) => {
 
     createPaymentIntent();
   }, [price, paymentIntent]);
+
+  console.log(`client data`, clientSecret);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     console.log(`hello world`);
@@ -71,7 +75,7 @@ const CheckoutForm = (price: { price: number }) => {
           style={{ margin: "10px 0 0 0" }}
           type="primary"
           htmlType="submit"
-          disabled={!stripe}
+          disabled={!stripe || !clientSecret}
         >
           Pay
         </Button>
