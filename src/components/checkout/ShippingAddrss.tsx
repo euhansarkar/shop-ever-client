@@ -8,18 +8,11 @@ import FormSelectCountryField from "../csc/FormSelectCountryField";
 import { getFromLocalStorage } from "@/utils/localStorage";
 import { CHECKOUT_STEPPER_PERSIST_KEY } from "@/constants/storageKey";
 import { debounce } from "lodash";
+import { useAppSelector } from "@/redux/hook";
 
 const ShippingAddrss = () => {
-  const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
-    undefined
-  );
-  const [selectedState, setSelectedState] = useState<string | undefined>(
-    undefined
-  );
-
-  const [selectedCity, setSelectedCity] = useState<string | undefined>(
-    undefined
-  );
+  const stepData = useAppSelector((state) => state.checkout);
+  console.log(`this is from shipping addr`, stepData);
 
   // get countries
   const countries = Country?.getAllCountries();
@@ -30,8 +23,12 @@ const ShippingAddrss = () => {
 
   // get states
   const states =
-    selectedCountry &&
-    State.getAllStates()?.filter((e) => e.countryCode === selectedCountry);
+    //@ts-ignore
+    stepData?.shippingAddr?.country &&
+    State.getAllStates()?.filter(
+      //@ts-ignore
+      (e) => e.countryCode === stepData?.shippingAddr?.country
+    );
   const myStateOptions =
     states?.length! > 0 &&
     states?.map((c) => ({
@@ -41,9 +38,14 @@ const ShippingAddrss = () => {
 
   // get cities
   const cities =
-    selectedState &&
+    //@ts-ignore
+    stepData?.shippingAddr?.state &&
     City.getAllCities()?.filter(
-      (e) => e.countryCode === selectedCountry && e.stateCode === selectedState
+      (e) =>
+        //@ts-ignore
+        e.countryCode === stepData?.shippingAddr?.country &&
+        //@ts-ignore
+        e.stateCode === stepData?.shippingAddr?.state
     );
   const myCityOptions =
     cities?.length! > 0 &&
@@ -129,8 +131,6 @@ const ShippingAddrss = () => {
                   name="shippingAddr.state"
                   options={myStateOptions}
                   label="State"
-                  onSelectedValueChange={(value) => setSelectedState(value)}
-                  selectedValue={selectedState}
                   placeholder="Select State"
                 />
               </div>
@@ -150,8 +150,6 @@ const ShippingAddrss = () => {
                   name="shippingAddr.city"
                   options={myCityOptions}
                   label="City"
-                  onSelectedValueChange={(value) => setSelectedCity(value)}
-                  selectedValue={selectedCity}
                   placeholder="Select City"
                 />
               </div>

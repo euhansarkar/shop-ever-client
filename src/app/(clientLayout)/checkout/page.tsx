@@ -6,11 +6,29 @@ import ShippingAddrss from "@/components/checkout/ShippingAddrss";
 import ShippingMethod from "@/components/checkout/ShippingMethod";
 import StepperForm from "@/components/stepper/FormStepper";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
+import { shippingMethodOptions } from "@/constants/global";
 import { CHECKOUT_STEPPER_PERSIST_KEY } from "@/constants/storageKey";
 import { useAppSelector } from "@/redux/hook";
 import { Col, Divider, Row } from "antd";
 
 const CheckOutPage = () => {
+  const stepData = useAppSelector((state) => state.checkout);
+
+  let getShippingMethod: any = {};
+
+  if (
+    //@ts-ignore
+    stepData?.shippingMethod?.name
+  ) {
+    //@ts-ignore
+    getShippingMethod = shippingMethodOptions?.find(
+      //@ts-ignore
+      (method) => method?.value === stepData?.shippingMethod?.name
+    );
+  }
+
+  console.log(`from main`, getShippingMethod);
+
   const { products, total } = useAppSelector((state) => state.cart);
 
   const steps = [
@@ -124,6 +142,23 @@ const CheckOutPage = () => {
                 <span>Discount</span>
                 <span>{total ? 0 : 0}</span>
               </div>
+
+              {
+                //@ts-ignore
+                stepData?.shippingMethod?.name && (
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span>Shipping</span>
+                    <span>{getShippingMethod?.cost}</span>
+                  </div>
+                )
+              }
 
               <Divider />
               <div

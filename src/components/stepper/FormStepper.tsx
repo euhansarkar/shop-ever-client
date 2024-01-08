@@ -33,7 +33,6 @@ const StepperForm = ({
   // let's get checkout data
   const stepData = useAppSelector((state) => state.checkout);
 
-  console.log(`get step data`, stepData);
 
   const [current, setCurrent] = useState<number>(
     !!getFromLocalStorage("step")
@@ -77,7 +76,6 @@ const StepperForm = ({
 
   useEffect(() => {
     setToLocalStorage(persistKey, JSON.stringify(watch));
-    console.log(`thi sis watch`, watch);
   }, [persistKey, methods, watch]);
 
   const handleStudentOnSubmit = (data: any) => {

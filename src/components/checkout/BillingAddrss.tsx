@@ -1,24 +1,14 @@
 "use client";
 import { City, Country, State } from "country-state-city";
-import { useState } from "react";
 import FormInput from "../Forms/FormInput";
 import FormSelectField from "../Forms/FormSelectField";
 import FormTextArea from "../Forms/FormTextArea";
 import FormSelectCountryField from "../csc/FormSelectCountryField";
+import { useAppSelector } from "@/redux/hook";
 
 const BillingAddrss = () => {
-  const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
-    undefined
-  );
-  const [selectedState, setSelectedState] = useState<string | undefined>(
-    undefined
-  );
-
-  const [selectedCity, setSelectedCity] = useState<string | undefined>(
-    undefined
-  );
-
-  console.log(`selected city`, selectedCity);
+  const stepData = useAppSelector((state) => state.checkout);
+  console.log(`this is from billing`, stepData);
 
   // get countries
   const countries = Country?.getAllCountries();
@@ -29,8 +19,12 @@ const BillingAddrss = () => {
 
   // get states
   const states =
-    selectedCountry &&
-    State.getAllStates()?.filter((e) => e.countryCode === selectedCountry);
+    //@ts-ignore
+    stepData?.billingAddr?.country &&
+    State.getAllStates()?.filter(
+      //@ts-ignore
+      (e) => e.countryCode === stepData?.billingAddr?.country
+    );
   const myStateOptions =
     states?.length! > 0 &&
     states?.map((c) => ({
@@ -40,9 +34,14 @@ const BillingAddrss = () => {
 
   // get cities
   const cities =
-    selectedState &&
+    //@ts-ignore
+    stepData?.billingAddr?.state &&
     City.getAllCities()?.filter(
-      (e) => e.countryCode === selectedCountry && e.stateCode === selectedState
+      (e) =>
+        //@ts-ignore
+        e.countryCode === stepData?.billingAddr?.country &&
+        //@ts-ignore
+        e.stateCode === stepData?.billingAddr?.state
     );
   const myCityOptions =
     cities?.length! > 0 &&
@@ -120,8 +119,6 @@ const BillingAddrss = () => {
                   options={countriesOptions}
                   label="Country"
                   placeholder="Select Country"
-                  onSelectedValueChange={(value) => setSelectedCountry(value)}
-                  selectedValue={selectedCountry}
                 />
               </div>
               <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
@@ -130,8 +127,6 @@ const BillingAddrss = () => {
                   name="billingAddr.state"
                   options={myStateOptions}
                   label="State"
-                  onSelectedValueChange={(value) => setSelectedState(value)}
-                  selectedValue={selectedState}
                   placeholder="Select State"
                 />
               </div>
@@ -151,8 +146,6 @@ const BillingAddrss = () => {
                   name="billingAddr.city"
                   options={myCityOptions}
                   label="City"
-                  onSelectedValueChange={(value) => setSelectedCity(value)}
-                  selectedValue={selectedCity}
                   placeholder="Select City"
                 />
               </div>

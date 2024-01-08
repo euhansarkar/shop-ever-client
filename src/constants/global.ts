@@ -50,14 +50,17 @@ export const shippingMethodOptions = [
     {
         label: "Free Delivery - $0.00",
         value: "free",
+        cost: 0
     },
     {
         label: "Standard Delivery - $5.00",
         value: "standard",
+        cost: 4.99
     },
     {
         label: "Express Delivery - $15.00",
         value: "express",
+        cost: 10.99
     },
 ];
 
