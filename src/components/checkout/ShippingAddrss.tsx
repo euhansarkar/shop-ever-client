@@ -1,18 +1,14 @@
 "use client";
+
 import { City, Country, State } from "country-state-city";
-import { useEffect, useState } from "react";
 import FormInput from "../Forms/FormInput";
 import FormSelectField from "../Forms/FormSelectField";
 import FormTextArea from "../Forms/FormTextArea";
 import FormSelectCountryField from "../csc/FormSelectCountryField";
-import { getFromLocalStorage } from "@/utils/localStorage";
-import { CHECKOUT_STEPPER_PERSIST_KEY } from "@/constants/storageKey";
-import { debounce } from "lodash";
 import { useAppSelector } from "@/redux/hook";
 
 const ShippingAddrss = () => {
   const stepData = useAppSelector((state) => state.checkout);
-  console.log(`this is from shipping addr`, stepData);
 
   // get countries
   const countries = Country?.getAllCountries();

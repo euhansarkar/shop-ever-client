@@ -1,126 +1,181 @@
-import { Button, Empty, Switch } from "antd";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import FormSelectField from "@/components/Forms/FormSelectField";
-import FormInput from "@/components/Forms/FormInput";
-import UncontrolledFormInput from "@/components/Forms/UncontrolledFormInput";
+"use client";
+import CheckoutCart from "@/components/cart/CheckoutCart";
+import BillingAddrss from "@/components/checkout/BillingAddrss";
+import PaymentMethod from "@/components/checkout/PaymentMethod";
+import ShippingAddrss from "@/components/checkout/ShippingAddrss";
+import ShippingMethod from "@/components/checkout/ShippingMethod";
+import StepperForm from "@/components/stepper/FormStepper";
+import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
+import { dummyShippingMethodOptions } from "@/constants/global";
+import { CHECKOUT_STEPPER_PERSIST_KEY } from "@/constants/storageKey";
+import { useAppSelector } from "@/redux/hook";
+import { Col, Divider, Row } from "antd";
 
-type DynamicInputProps = {
-  name: string;
-  subName: string;
-  size: "small" | "middle" | "large";
-  placeholder: string;
-  label: string;
-  id: string;
-};
+const CheckOutPage = () => {
+  const stepData = useAppSelector((state) => state.checkout);
 
-const FormDynamicFields = ({
-  name,
-  subName,
-  size,
-  placeholder,
-  label,
-  id,
-}: DynamicInputProps) => {
-  const { control, setValue, getValues } = useFormContext();
-  let { fields, append, remove } = useFieldArray({
-    control,
-    name: name,
-    keyName: "customId",
-  });
+  let getShippingMethod: any = {};
 
-  const handleSwitchToggle = (index: number, isChecked: boolean) => {
-    const currentOptions = getValues(name);
-    currentOptions[index].is_deleted = isChecked;
-    setValue(name, currentOptions);
+  if (
+    //@ts-ignore
+    stepData?.shippingMethod?.name
+  ) {
+    //@ts-ignore
+    getShippingMethod = dummyShippingMethodOptions?.find(
+      //@ts-ignore
+      (method) => method?.value === stepData?.shippingMethod?.name
+    );
+  }
+
+  const { products, total } = useAppSelector((state) => state.cart);
+
+  const steps = [
+    {
+      title: "Shipping Info",
+      content: <ShippingAddrss />,
+    },
+    {
+      title: "Shipping Method",
+      content: <ShippingMethod />,
+    },
+    {
+      title: "Billing Address",
+      content: <BillingAddrss />,
+    },
+    {
+      title: "Payment",
+      content: <PaymentMethod />,
+    },
+  ];
+
+  const handleStudentSubmit = async (values: any) => {
+    console.log(`get values`, values);
+    // const obj = { ...values };
+    // const file = obj["file"];
+    // delete obj["file"];
+    // const data = JSON.stringify(obj);
+    // const formData = new FormData();
+    // formData.append("file", file as Blob);
+    // formData.append("data", data);
+    // message.loading("Creating...");
+    try {
+      // const res = await addStudentWithFormData(formData);
+      // if (!!res) {
+      //   message.success("Student created successfully!");
+      // }
+    } catch (err: any) {
+      console.error(err.message);
+    }
   };
 
-  fields = fields?.filter((field) => field?.attribute_group_id === id);
-
-  const attributeOptions = fields?.map((group) => ({
-    label: group?.attribute_name,
-    value: group?.id,
-  }));
-
-  console.log(`this data is from att selection`, fields);
-
   return (
-    <>
-      <div>
-        <p
+    <Row gutter={{ xs: 24, xl: 8, lg: 8, md: 24 }}>
+      <Col span={12} style={{ margin: "10px 0" }}>
+        <div>
+          <SEBreadCrumb
+            items={[
+              {
+                label: `Home`,
+                link: `/home`,
+              },
+              {
+                label: `Checkout`,
+                link: `/checkout`,
+              },
+            ]}
+          />
+
+          <StepperForm
+            persistKey={CHECKOUT_STEPPER_PERSIST_KEY}
+            submitHandler={(value) => {
+              handleStudentSubmit(value);
+            }}
+            steps={steps}
+          />
+        </div>
+      </Col>
+
+      {/* second col */}
+      <Col span={12} style={{ margin: "10px 0" }}>
+        <div
           style={{
-            fontSize: "14px",
+            border: "1px solid #d9d9d9",
+            borderRadius: "5px",
+            padding: "15px",
             marginBottom: "10px",
+            marginTop: "10px",
           }}
         >
-          {label}
-        </p>
-        {fields.length > 0 ? (
-          fields.map((item, index) => {
-            return (
+          <div>
+            <p
+              style={{
+                fontSize: "18px",
+                marginBottom: "10px",
+              }}
+            >
+              Products
+            </p>
+            <CheckoutCart products={products} />
+            <div style={{ paddingLeft: "10px", paddingRight: "20px" }}>
               <div
-                key={item.customId}
                 style={{
-                  display: "flex",
                   marginTop: "10px",
-                  gap: "10px",
+                  display: "flex",
                   alignItems: "center",
+                  justifyContent: "space-between",
                 }}
               >
-                <FormSelectField
-                  name={`${name}.${index}.${subName}`}
-                  size={size}
-                  placeholder={`${placeholder}: ${index}`}
-                  options={attributeOptions!}
-                />
-
-                <Button
-                  type="primary"
-                  onClick={() => remove(index)}
-                  danger
-                  style={{ margin: "5px 0px" }}
-                  size={size}
-                >
-                  Delete
-                </Button>
-
-                <Switch
-                  checkedChildren={<CheckOutlined />}
-                  unCheckedChildren={<CloseOutlined />}
-                  //@ts-ignore
-                  defaultChecked={fields[index].is_deleted === true}
-                  onChange={(isChecked) => handleSwitchToggle(index, isChecked)}
-                />
+                <span>sub total</span>
+                <span>{total ? total : 0}</span>
               </div>
-            );
-          })
-        ) : (
-          <Empty
-            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-            imageStyle={{ height: 60 }}
-            description={<span>Attribute Options Not Found</span>}
-          />
-        )}
-      </div>
-      <div
-        style={{
-          textAlign: "center",
-        }}
-      >
-        <Button
-          style={{ marginTop: "10px" }}
-          type="primary"
-          onClick={() =>
-            append({
-              is_deleted: false,
-            })
-          }
-        >
-          Add New Option
-        </Button>
-      </div>
-    </>
+
+              <div
+                style={{
+                  marginTop: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>Discount</span>
+                <span>{total ? 0 : 0}</span>
+              </div>
+
+              {
+                //@ts-ignore
+                stepData?.shippingMethod?.name && (
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span>Shipping</span>
+                    <span>{getShippingMethod?.cost}</span>
+                  </div>
+                )
+              }
+
+              <Divider />
+              <div
+                style={{
+                  marginTop: "22px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>total</span>
+                <span>{total ? total : 0}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Col>
+    </Row>
   );
 };
 
-export default FormDynamicFields;
+export default CheckOutPage;

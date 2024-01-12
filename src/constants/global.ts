@@ -46,7 +46,7 @@ export const filterableOptions = [
 ];
 
 
-export const shippingMethodOptions = [
+export const dummyShippingMethodOptions = [
     {
         label: "Free Delivery - $0.00",
         value: "free",

@@ -4,13 +4,13 @@ import _ from "lodash";
 interface CheckoutState {
 }
 
-const initialCheckoutState: CheckoutState = {
+const initialState: CheckoutState = {
 
 };
 
 const checkoutSlice = createSlice({
   name: 'checkout',
-  initialState: initialCheckoutState,
+  initialState,
   reducers: {
     addCheckoutData: (state, action: PayloadAction<CheckoutState>) => {
 

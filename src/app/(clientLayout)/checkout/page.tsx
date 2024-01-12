@@ -6,14 +6,20 @@ import ShippingAddrss from "@/components/checkout/ShippingAddrss";
 import ShippingMethod from "@/components/checkout/ShippingMethod";
 import StepperForm from "@/components/stepper/FormStepper";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
-import { shippingMethodOptions } from "@/constants/global";
+import { dummyShippingMethodOptions } from "@/constants/global";
 import { CHECKOUT_STEPPER_PERSIST_KEY } from "@/constants/storageKey";
-import { useAppSelector } from "@/redux/hook";
+import { setStripeCardError } from "@/redux/features/payment/paymentSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Col, Divider, Row } from "antd";
 
 const CheckOutPage = () => {
+  const dispatch = useAppDispatch();
   const stepData = useAppSelector((state) => state.checkout);
 
+  const stripe = useStripe();
+  const elements = useElements();
+  const { clientSecret } = useAppSelector((state) => state.payment);
   let getShippingMethod: any = {};
 
   if (
@@ -21,13 +27,11 @@ const CheckOutPage = () => {
     stepData?.shippingMethod?.name
   ) {
     //@ts-ignore
-    getShippingMethod = shippingMethodOptions?.find(
+    getShippingMethod = dummyShippingMethodOptions?.find(
       //@ts-ignore
       (method) => method?.value === stepData?.shippingMethod?.name
     );
   }
-
-  console.log(`from main`, getShippingMethod);
 
   const { products, total } = useAppSelector((state) => state.cart);
 
@@ -51,7 +55,45 @@ const CheckOutPage = () => {
   ];
 
   const handleStudentSubmit = async (values: any) => {
-    console.log(`get values`, values);
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const card = elements.getElement(CardElement);
+    if (!card) {
+      return;
+    }
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card,
+    });
+
+    if (error) {
+      console.log(error);
+      dispatch(setStripeCardError(error?.message!));
+    } else {
+      dispatch(setStripeCardError(""));
+    }
+
+    const { paymentIntent, error: confirmError } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card,
+          billing_details: {
+            name: "Jenny Rosen",
+          },
+        },
+      });
+
+    if (confirmError) {
+      setStripeCardError(confirmError?.message!);
+      return;
+    }
+
+    console.log(`payment intent`, paymentIntent);
+
+    // console.log(`get values`, values);
     // const obj = { ...values };
     // const file = obj["file"];
     // delete obj["file"];

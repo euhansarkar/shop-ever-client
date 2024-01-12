@@ -178,3 +178,17 @@ export interface ICartProduct {
     price: number;
     img: string;
 }
+
+
+export interface IShippingMethod {
+    id: string;
+    method_name: string;
+    method_code: string;
+    cost: number;
+}
+
+export interface IPaymentMethod {
+    id: string;
+    method_name: string;
+    method_code: string;
+}

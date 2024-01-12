@@ -1,9 +1,43 @@
 "use client";
 import { useState } from "react";
 import FormRadioField from "../Forms/FormRadioField";
-import { paymentMethodOptions } from "@/constants/global";
+import { useAppSelector, useDebounced } from "@/redux/hook";
+import CheckoutForm from "./CheckoutForm";
+import { usePaymentMethodsQuery } from "@/redux/api/paymentMethodApi";
 
 const PaymentMethod = () => {
+  const { total } = useAppSelector((state) => state.cart);
+  const query: Record<string, any> = {};
+
+  const [page, setPage] = useState<number>(1);
+  const [size, setSize] = useState<number>(10);
+  const [sortBy, setSortBy] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  query["limit"] = size;
+  query["page"] = page;
+  query["sortBy"] = sortBy;
+  query["sortOrder"] = sortOrder;
+
+  const debouncedSearchTerm = useDebounced({
+    searchQuery: searchTerm,
+    delay: 600,
+  });
+
+  if (!!debouncedSearchTerm) {
+    query["searchTerm"] = debouncedSearchTerm;
+  }
+
+  const { data, isLoading } = usePaymentMethodsQuery({ ...query });
+
+  const paymentMethodOptions = data?.paymentMethods?.map((method) => ({
+    label: method?.method_name,
+    value: method?.method_code,
+  }));
+
+  const stepData = useAppSelector((state) => state.checkout);
+
   const [isRequiredType, setIsRequiredType] = useState<string | undefined>(
     undefined
   );
@@ -29,14 +63,26 @@ const PaymentMethod = () => {
           </p>
           <div>
             <div style={{ margin: "10px 0px" }}>
-              <FormRadioField
-                size="large"
-                name="paymentMethod.name"
-                options={paymentMethodOptions}
-                label=""
-                onValueChange={(value) => setIsRequiredType(value)}
-              />
+              {paymentMethodOptions !== undefined &&
+                paymentMethodOptions?.length > 0 && (
+                  <FormRadioField
+                    size="large"
+                    name="paymentMethod.name"
+                    options={paymentMethodOptions}
+                    label=""
+                    onValueChange={(value) => setIsRequiredType(value)}
+                  />
+                )}
             </div>
+            {
+              //@ts-ignore
+              stepData?.paymentMethod?.name === "card" && (
+                <>
+                  <CheckoutForm price={total} />
+                  {/* <CheckOutForm product={product} orderData={orderData}></CheckOutForm> */}
+                </>
+              )
+            }
           </div>
         </div>
       </div>

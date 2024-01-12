@@ -1,70 +1,109 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { usePaymentIntentMutation } from "@/redux/api/paymentApi";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { Button } from "antd";
+import { FormEvent, useEffect, useState } from "react";
 
-export interface CheckoutState {
-  // shippingAddr: {
-  //   name: string;
-  //   country: string;
-  //   state: string;
-  //   city: string;
-  //   phone_number_1: string;
-  //   phone_number_2: string;
-  //   location: string;
-  // };
-  // shippingMethod: {
-  //   name: string;
-  // };
-  // billingAddr: {
-  //   name: string;
-  //   country: string;
-  //   state: string;
-  //   city: string;
-  //   phone_number_1: string;
-  //   phone_number_2: string;
-  //   location: string;
-  // };
-  // paymentMethod: {
-  //   name: string;
-  // };
-}
+const CheckoutForm = (price: { price: number }) => {
+  const [paymentIntent] = usePaymentIntentMutation();
+  const [clientSecret, setClientSecret] = useState<string>("");
+  const [stripeCardError, setStripeCardError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
 
-export const initialCheckoutState: CheckoutState = {
-  // shippingAddr: {
-  //   name: '',
-  //   country: '',
-  //   state: '',
-  //   city: '',
-  //   phone_number_1: '',
-  //   phone_number_2: '',
-  //   location: '',
-  // },
-  // shippingMethod: {
-  //   name: '',
-  // },
-  // billingAddr: {
-  //   name: '',
-  //   country: '',
-  //   state: '',
-  //   city: '',
-  //   phone_number_1: '',
-  //   phone_number_2: '',
-  //   location: '',
-  // },
-  // paymentMethod: {
-  //   name: '',
-  // },
+  const stripe = useStripe();
+  const elements = useElements();
+
+  useEffect(() => {
+    const createPaymentIntent = async () => {
+      try {
+        const response = await paymentIntent(price);
+        console.log(response);
+        setClientSecret(response?.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    createPaymentIntent();
+  }, [price, paymentIntent]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    console.log(`hello world`);
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const card = elements.getElement(CardElement);
+    if (!card) {
+      return;
+    }
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card,
+    });
+
+    if (error) {
+      console.log(error);
+      setStripeCardError(error?.message!);
+    } else {
+      setStripeCardError("");
+    }
+
+    const { paymentIntent, error: confirmError } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card,
+          billing_details: {
+            name: "Jenny Rosen",
+          },
+        },
+      });
+
+    if (confirmError) {
+      setStripeCardError(confirmError?.message!);
+      return;
+    }
+
+    if (paymentIntent.status === "succeeded") {
+      setSuccess("");
+    }
+
+    console.log(`payment intent`, paymentIntent);
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: "16px",
+                color: "#424770",
+                "::placeholder": {
+                  color: "#aab7c4",
+                },
+              },
+              invalid: {
+                color: "#9e2146",
+              },
+            },
+          }}
+        />
+        <Button
+          style={{ margin: "10px 0 0 0" }}
+          type="primary"
+          htmlType="submit"
+          disabled={!stripe || !clientSecret}
+        >
+          Pay
+        </Button>
+      </form>
+      {stripeCardError && <p style={{ color: "red" }}>{stripeCardError}</p>}
+    </div>
+  );
 };
 
-const checkoutSlice = createSlice({
-  name: 'checkout',
-  initialState: initialCheckoutState,
-  reducers: {
-    addCheckoutData: (state, action: PayloadAction<CheckoutState>) => {
-      return {
-        ...state, ...action.payload
-      }
-    },
-  },
-});
-
-export const { addCheckoutData } = checkoutSlice.actions;
-export default checkoutSlice.reducer;
+export default CheckoutForm;

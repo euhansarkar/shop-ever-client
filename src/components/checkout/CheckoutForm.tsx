@@ -1,85 +1,60 @@
 import { usePaymentIntentMutation } from "@/redux/api/paymentApi";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { setClientSecret } from "@/redux/features/payment/paymentSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { CardElement, useStripe } from "@stripe/react-stripe-js";
 import { Button } from "antd";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const CheckoutForm = (price: { price: number }) => {
+  const dispatch = useAppDispatch();
   const [paymentIntent] = usePaymentIntentMutation();
-  const [clientSecret, setClientSecret] = useState<string>("");
-  const [stripeCardError, setStripeCardError] = useState<string>("");
+  const { clientSecret, stripeCardError } = useAppSelector(
+    (state) => state.payment
+  );
+
   const stripe = useStripe();
-  const elements = useElements();
 
   useEffect(() => {
     const createPaymentIntent = async () => {
       try {
-        const response = await paymentIntent(price);
-        console.log(response);
-        setClientSecret(response?.data);
+        if (!clientSecret || clientSecret === "") {
+          const response = await paymentIntent(price);
+          dispatch(setClientSecret(response?.data));
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
     createPaymentIntent();
-  }, [price, paymentIntent]);
-
-  console.log(`client data`, clientSecret);
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    console.log(`hello world`);
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    const card = elements.getElement(CardElement);
-    if (!card) {
-      return;
-    }
-
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card,
-    });
-
-    if (error) {
-      console.log(error);
-      setStripeCardError(error?.message!);
-    } else {
-      setStripeCardError("");
-    }
-  };
+  }, [price, paymentIntent, dispatch, clientSecret]);
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <CardElement
-          options={{
-            style: {
-              base: {
-                fontSize: "16px",
-                color: "#424770",
-                "::placeholder": {
-                  color: "#aab7c4",
-                },
-              },
-              invalid: {
-                color: "#9e2146",
+      <CardElement
+        options={{
+          style: {
+            base: {
+              fontSize: "16px",
+              color: "#424770",
+              "::placeholder": {
+                color: "#aab7c4",
               },
             },
-          }}
-        />
-        <Button
-          style={{ margin: "10px 0 0 0" }}
-          type="primary"
-          htmlType="submit"
-          disabled={!stripe || !clientSecret}
-        >
-          Pay
-        </Button>
-      </form>
+            invalid: {
+              color: "#9e2146",
+            },
+          },
+        }}
+      />
+      <Button
+        style={{ margin: "10px 0 0 0" }}
+        type="primary"
+        htmlType="submit"
+        disabled={!stripe || !clientSecret}
+      >
+        Pay
+      </Button>
       {stripeCardError && <p style={{ color: "red" }}>{stripeCardError}</p>}
     </div>
   );

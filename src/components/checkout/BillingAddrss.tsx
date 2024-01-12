@@ -8,7 +8,6 @@ import { useAppSelector } from "@/redux/hook";
 
 const BillingAddrss = () => {
   const stepData = useAppSelector((state) => state.checkout);
-  console.log(`this is from billing`, stepData);
 
   // get countries
   const countries = Country?.getAllCountries();

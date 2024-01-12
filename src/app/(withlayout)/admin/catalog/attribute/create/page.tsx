@@ -30,6 +30,7 @@ const AttributeCreationPage = () => {
   );
   const { data, isLoading } = useAttributeGroupsQuery({ page: 1, limit: 100 });
   const attributeGroups = data?.attributeGroups;
+  
   const attributeGroupOptions = attributeGroups?.map((group) => ({
     label: group?.group_name,
     value: group?.id,
