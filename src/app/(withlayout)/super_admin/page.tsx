@@ -1,7 +1,7 @@
 const SuperAdminPage = () => {
   return (
     <div>
-      <h1>This page is for super admin</h1>
+      <h2>This page is for super admin</h2>
     </div>
   );
 };

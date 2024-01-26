@@ -1,4 +1,4 @@
-import { IMeta, IProduct, IVarient } from "@/types";
+import { IMeta, IProduct } from "@/types";
 import { crudTypes } from "../crud-types";
 import { tagTypes } from '../tag-types';
 import { baseApi } from "./baseApi";

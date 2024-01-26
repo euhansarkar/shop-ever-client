@@ -6,7 +6,7 @@ import FormTextArea from "../Forms/FormTextArea";
 import FormSelectCountryField from "../csc/FormSelectCountryField";
 import { useAppSelector } from "@/redux/hook";
 
-const BillingAddrss = () => {
+const BillingAddress = () => {
   const stepData = useAppSelector((state) => state.checkout);
 
   // get countries
@@ -19,10 +19,10 @@ const BillingAddrss = () => {
   // get states
   const states =
     //@ts-ignore
-    stepData?.billingAddr?.country &&
+    stepData?.billing_address?.country &&
     State.getAllStates()?.filter(
       //@ts-ignore
-      (e) => e.countryCode === stepData?.billingAddr?.country
+      (e) => e.countryCode === stepData?.billing_address?.country
     );
   const myStateOptions =
     states?.length! > 0 &&
@@ -34,13 +34,13 @@ const BillingAddrss = () => {
   // get cities
   const cities =
     //@ts-ignore
-    stepData?.billingAddr?.state &&
+    stepData?.billing_address?.state &&
     City.getAllCities()?.filter(
       (e) =>
         //@ts-ignore
-        e.countryCode === stepData?.billingAddr?.country &&
+        e.countryCode === stepData?.billing_address?.country &&
         //@ts-ignore
-        e.stateCode === stepData?.billingAddr?.state
+        e.stateCode === stepData?.billing_address?.state
     );
   const myCityOptions =
     cities?.length! > 0 &&
@@ -72,7 +72,7 @@ const BillingAddrss = () => {
             <div style={{ margin: "10px 0px" }}>
               <FormInput
                 type="text"
-                name="billingAddr.name"
+                name="billing_address.name"
                 size="large"
                 label="Full Name"
               />
@@ -88,7 +88,7 @@ const BillingAddrss = () => {
               <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
                 <FormInput
                   type="text"
-                  name="billingAddr.phone_number_1"
+                  name="billing_address.phone_number_1"
                   size="large"
                   label="Mobile Number"
                 />
@@ -96,7 +96,7 @@ const BillingAddrss = () => {
               <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
                 <FormInput
                   type="text"
-                  name="billingAddr.phone_number_2"
+                  name="billing_address.phone_number_2"
                   size="large"
                   label="Alternative Mobile Number"
                 />
@@ -114,7 +114,7 @@ const BillingAddrss = () => {
               <div style={{ margin: `10px 0px`, flexBasis: "50%" }}>
                 <FormSelectCountryField
                   size="large"
-                  name="billingAddr.country"
+                  name="billing_address.country"
                   options={countriesOptions}
                   label="Country"
                   placeholder="Select Country"
@@ -123,7 +123,7 @@ const BillingAddrss = () => {
               <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
                 <FormSelectField
                   size="large"
-                  name="billingAddr.state"
+                  name="billing_address.state"
                   options={myStateOptions}
                   label="State"
                   placeholder="Select State"
@@ -142,7 +142,7 @@ const BillingAddrss = () => {
               <div style={{ margin: `10px 0px`, flexBasis: "50%" }}>
                 <FormSelectField
                   size="large"
-                  name="billingAddr.city"
+                  name="billing_address.city"
                   options={myCityOptions}
                   label="City"
                   placeholder="Select City"
@@ -152,7 +152,7 @@ const BillingAddrss = () => {
 
             <div style={{ margin: "10px 0px" }}>
               <FormTextArea
-                name="billingAddr.location"
+                name="billing_address.location"
                 rows={5}
                 placeholder="your location"
                 label="Location"
@@ -165,4 +165,4 @@ const BillingAddrss = () => {
   );
 };
 
-export default BillingAddrss;
+export default BillingAddress;

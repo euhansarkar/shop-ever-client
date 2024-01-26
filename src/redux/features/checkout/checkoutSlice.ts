@@ -21,8 +21,12 @@ const checkoutSlice = createSlice({
       return state;
 
     },
+    resetCheckoutData: (state) => {
+      state = { ...initialState };
+      return state;
+    }
   },
 });
 
-export const { addCheckoutData } = checkoutSlice.actions;
+export const { addCheckoutData, resetCheckoutData } = checkoutSlice.actions;
 export default checkoutSlice.reducer;

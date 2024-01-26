@@ -1,39 +1,30 @@
 "use client";
-import CheckoutCart from "@/components/cart/CheckoutCart";
 import BillingAddrss from "@/components/checkout/BillingAddrss";
+import CartItem from "@/components/checkout/CartItem";
 import PaymentMethod from "@/components/checkout/PaymentMethod";
 import ShippingAddrss from "@/components/checkout/ShippingAddrss";
 import ShippingMethod from "@/components/checkout/ShippingMethod";
 import StepperForm from "@/components/stepper/FormStepper";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
-import { dummyShippingMethodOptions } from "@/constants/global";
 import { CHECKOUT_STEPPER_PERSIST_KEY } from "@/constants/storageKey";
+import { useAddOrderMutation } from "@/redux/api/orderApi";
+import { resetCheckoutData } from "@/redux/features/checkout/checkoutSlice";
 import { setStripeCardError } from "@/redux/features/payment/paymentSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { Col, Divider, Row } from "antd";
+import { Col, Row, message } from "antd";
+import { redirect, useRouter } from "next/navigation";
 
 const CheckOutPage = () => {
+  const router = useRouter();
+  const [addOrder] = useAddOrderMutation();
   const dispatch = useAppDispatch();
+  const { products } = useAppSelector((state) => state.cart);
   const stepData = useAppSelector((state) => state.checkout);
 
   const stripe = useStripe();
   const elements = useElements();
   const { clientSecret } = useAppSelector((state) => state.payment);
-  let getShippingMethod: any = {};
-
-  if (
-    //@ts-ignore
-    stepData?.shippingMethod?.name
-  ) {
-    //@ts-ignore
-    getShippingMethod = dummyShippingMethodOptions?.find(
-      //@ts-ignore
-      (method) => method?.value === stepData?.shippingMethod?.name
-    );
-  }
-
-  const { products, total } = useAppSelector((state) => state.cart);
 
   const steps = [
     {
@@ -54,46 +45,61 @@ const CheckOutPage = () => {
     },
   ];
 
-  const handleStudentSubmit = async (values: any) => {
-    if (!stripe || !elements) {
-      return;
-    }
+  const handleOrderSubmit = async (values: any) => {
+    // const data = JSON.parse(getFromLocalStorage(CHECKOUT_STEPPER_PERSIST_KEY) as string);
 
-    const card = elements.getElement(CardElement);
-    if (!card) {
-      return;
-    }
+    // console.log(`this is data submitttted`, data);
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card,
-    });
+    // console.log(`this is valuuuuues`, values);
 
-    if (error) {
-      console.log(error);
-      dispatch(setStripeCardError(error?.message!));
-    } else {
-      dispatch(setStripeCardError(""));
-    }
+    if (values?.paymentMethod?.name === "card") {
+      if (!stripe || !elements) {
+        return;
+      }
 
-    const { paymentIntent, error: confirmError } =
-      await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card,
-          billing_details: {
-            name: "Jenny Rosen",
-          },
-        },
+      const card = elements.getElement(CardElement);
+
+      if (!card) {
+        return;
+      }
+
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card,
       });
 
-    if (confirmError) {
-      setStripeCardError(confirmError?.message!);
-      return;
+      if (error) {
+        console.log(error);
+        setStripeCardError(error?.message!);
+      } else {
+        setStripeCardError("");
+      }
+
+      const { paymentIntent, error: confirmError } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card,
+            billing_details: {
+              name: "Jenny Rosen",
+            },
+          },
+        });
+
+      if (confirmError) {
+        setStripeCardError(confirmError?.message!);
+        return;
+      }
+
+      // if (paymentIntent.status === "succeeded") {
+      //   setSuccess("");
+      // }
+
+      console.log(`payment intent`, paymentIntent);
     }
 
-    console.log(`payment intent`, paymentIntent);
+    dispatch(resetCheckoutData());
+    localStorage.removeItem(CHECKOUT_STEPPER_PERSIST_KEY);
 
-    // console.log(`get values`, values);
     // const obj = { ...values };
     // const file = obj["file"];
     // delete obj["file"];
@@ -103,123 +109,55 @@ const CheckOutPage = () => {
     // formData.append("data", data);
     // message.loading("Creating...");
     try {
-      // const res = await addStudentWithFormData(formData);
-      // if (!!res) {
-      //   message.success("Student created successfully!");
-      // }
+      console.log(`pre add`, values);
+      const res = await addOrder(values).unwrap();
+      if (!!res?.id) {
+        console.log(`this is order response`, res);
+        message.success("Order created successfully!");
+        router.push(`/checkout/success/${res?.id}`);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  return (
-    <Row gutter={{ xs: 24, xl: 8, lg: 8, md: 24 }}>
-      <Col span={12} style={{ margin: "10px 0" }}>
-        <div>
-          <SEBreadCrumb
-            items={[
-              {
-                label: `Home`,
-                link: `/home`,
-              },
-              {
-                label: `Checkout`,
-                link: `/checkout`,
-              },
-            ]}
-          />
-
-          <StepperForm
-            persistKey={CHECKOUT_STEPPER_PERSIST_KEY}
-            submitHandler={(value) => {
-              handleStudentSubmit(value);
-            }}
-            steps={steps}
-          />
-        </div>
-      </Col>
-
-      {/* second col */}
-      <Col span={12} style={{ margin: "10px 0" }}>
-        <div
-          style={{
-            border: "1px solid #d9d9d9",
-            borderRadius: "5px",
-            padding: "15px",
-            marginBottom: "10px",
-            marginTop: "10px",
-          }}
-        >
+  if (products?.length > 0) {
+    return (
+      <Row gutter={{ xs: 24, xl: 8, lg: 8, md: 24 }}>
+        <Col span={12} style={{ margin: "10px 0" }}>
           <div>
-            <p
-              style={{
-                fontSize: "18px",
-                marginBottom: "10px",
+            <SEBreadCrumb
+              items={[
+                {
+                  label: `Home`,
+                  link: `/home`,
+                },
+                {
+                  label: `Checkout`,
+                  link: `/checkout`,
+                },
+              ]}
+            />
+
+            <StepperForm
+              persistKey={CHECKOUT_STEPPER_PERSIST_KEY}
+              submitHandler={(value) => {
+                handleOrderSubmit(value);
               }}
-            >
-              Products
-            </p>
-            <CheckoutCart products={products} />
-            <div style={{ paddingLeft: "10px", paddingRight: "20px" }}>
-              <div
-                style={{
-                  marginTop: "10px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span>sub total</span>
-                <span>{total ? total : 0}</span>
-              </div>
-
-              <div
-                style={{
-                  marginTop: "10px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span>Discount</span>
-                <span>{total ? 0 : 0}</span>
-              </div>
-
-              {
-                //@ts-ignore
-                stepData?.shippingMethod?.name && (
-                  <div
-                    style={{
-                      marginTop: "10px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span>Shipping</span>
-                    <span>{getShippingMethod?.cost}</span>
-                  </div>
-                )
-              }
-
-              <Divider />
-              <div
-                style={{
-                  marginTop: "22px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span>total</span>
-                <span>{total ? total : 0}</span>
-              </div>
-            </div>
+              steps={steps}
+            />
           </div>
-        </div>
-      </Col>
-    </Row>
-  );
+        </Col>
+
+        {/* second col */}
+        <Col span={12} style={{ margin: "10px 0" }}>
+          <CartItem />
+        </Col>
+      </Row>
+    );
+  } else {
+    return redirect(`/cart`);
+  }
 };
 
 export default CheckOutPage;

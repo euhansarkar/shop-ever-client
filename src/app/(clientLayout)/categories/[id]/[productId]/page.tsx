@@ -14,7 +14,7 @@ const ProductPage = ({ params }: any) => {
   } = theme.useToken();
 
   const des =
-    "<h1>hello world</h1><p>lorem ipsum doler sit amet what are you doing there</p>";
+    "<h2>hello world</h2><p>lorem ipsum doler sit amet what are you doing there</p>";
 
   // get product
   const { data: productData, isLoading: productLoading } =

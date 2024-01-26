@@ -5,6 +5,7 @@ import {
   removeFromCart,
   removeOne,
 } from "@/redux/features/cart/cartSlice";
+import dynamic from "next/dynamic";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import {
   MinusOutlined,
@@ -142,4 +143,4 @@ const SECart = ({ showDrawer, onClose, open }: ICart) => {
   );
 };
 
-export default SECart;
+export default dynamic(() => Promise.resolve(SECart), { ssr: false });

@@ -10,6 +10,7 @@ import { storeUserInfo } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { loginSchema } from "@/schema/login";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Link from "next/link";
 
 type FormValues = {
   email: string;
@@ -25,7 +26,7 @@ const LoginPage = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
     try {
       const res = await userLogin({ ...data }).unwrap();
-      // console.log(res);
+      console.log(`login user`, res);
       if (res?.accessToken) {
         router.push("/profile");
         message.success("User logged in successfully!");
@@ -42,7 +43,7 @@ const LoginPage = () => {
       justify="center"
       align="middle"
       style={{
-        minHeight: "100vh",
+        minHeight: "80vh",
       }}
     >
       <Col sm={12} md={16} lg={10}>
@@ -81,9 +82,17 @@ const LoginPage = () => {
                 required
               />
             </div>
-            <Button type="primary" htmlType="submit">
-              Login
-            </Button>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Button type="primary" htmlType="submit">
+                Login
+              </Button>
+              <Link href={`/account/register`}>
+                <Button type="default">Create New Account</Button>
+              </Link>
+              <Link href={`/account/reset-password`}>
+                <Button type="default">Forgot Your Password ?</Button>
+              </Link>
+            </div>
           </Form>
         </div>
       </Col>

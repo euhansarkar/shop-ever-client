@@ -33,11 +33,11 @@ const PaymentMethod = () => {
 
   const paymentMethodOptions = data?.paymentMethods?.map((method) => ({
     label: method?.method_name,
-    value: method?.method_code,
+    value: method?.id,
   }));
 
   const stepData = useAppSelector((state) => state.checkout);
-
+  
   const [isRequiredType, setIsRequiredType] = useState<string | undefined>(
     undefined
   );
@@ -67,7 +67,7 @@ const PaymentMethod = () => {
                 paymentMethodOptions?.length > 0 && (
                   <FormRadioField
                     size="large"
-                    name="paymentMethod.name"
+                    name="paymentMethodId"
                     options={paymentMethodOptions}
                     label=""
                     onValueChange={(value) => setIsRequiredType(value)}
@@ -75,13 +75,16 @@ const PaymentMethod = () => {
                 )}
             </div>
             {
+              
               //@ts-ignore
-              stepData?.paymentMethod?.name === "card" && (
-                <>
-                  <CheckoutForm price={total} />
-                  {/* <CheckOutForm product={product} orderData={orderData}></CheckOutForm> */}
-                </>
-              )
+              stepData?.paymentMethod?.name === "card" &&
+                //@ts-ignore
+                // stepData?.paymentMethod?.name !== "cashOn" &&
+                 (
+                  <>
+                    <CheckoutForm price={total} />
+                  </>
+                )
             }
           </div>
         </div>

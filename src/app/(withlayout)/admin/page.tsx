@@ -2,7 +2,7 @@
 const AdminPage = () => {
   return (
     <div>
-      <h1>this page is for admin</h1>
+      <h2>this page is for admin</h2>
     </div>
   );
 };

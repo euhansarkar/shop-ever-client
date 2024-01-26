@@ -1,7 +1,7 @@
 "use client";
 
 import _ from "lodash";
-import { addCheckoutData } from "@/redux/features/checkout/checkoutSlice";
+import { addCheckoutData, resetCheckoutData } from "@/redux/features/checkout/checkoutSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { getFromLocalStorage, setToLocalStorage } from "@/utils/localStorage";
 import { Button, message, Steps } from "antd";
@@ -70,6 +70,8 @@ const StepperForm = ({
   useEffect(() => {
     if (!_.isEqual(stepData, watch)) {
       const copyWatch = watch ;
+      console.log(`this is from stepper watching data`, copyWatch);
+      console.log(`this is redux stepper data`, stepData);
       dispatch(addCheckoutData(copyWatch));
     }
   }, [persistKey, methods, watch, stepData, dispatch]);
@@ -78,11 +80,12 @@ const StepperForm = ({
     setToLocalStorage(persistKey, JSON.stringify(watch));
   }, [persistKey, methods, watch]);
 
-  const handleStudentOnSubmit = (data: any) => {
+  const handleOrderOnSubmit = (data: any) => {
     submitHandler(data);
-    reset();
     setToLocalStorage("step", JSON.stringify({ step: 0 }));
     setToLocalStorage(persistKey, JSON.stringify({}));
+    dispatch(resetCheckoutData());
+    reset();
     navigateLink && router.push(navigateLink);
   };
 
@@ -90,7 +93,7 @@ const StepperForm = ({
     <>
       <Steps current={current} items={items} />
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(handleStudentOnSubmit)}>
+        <form onSubmit={handleSubmit(handleOrderOnSubmit)}>
           <div>{steps[current].content}</div>
           <div style={{ marginTop: 24 }}>
             {current < steps.length - 1 && (

@@ -24,7 +24,7 @@ const PermissionPage = () => {
           <Button type="primary">create new</Button>
         </Link>
       </ActionBar>
-      <h1>this is permission page</h1>
+      <h2>this is permission page</h2>
     </div>
   );
 };

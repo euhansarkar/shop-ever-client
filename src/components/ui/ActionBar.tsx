@@ -15,7 +15,7 @@ const ActionBar = ({ title, children }: ActionBarProps) => {
         margin: "10px 0px",
       }}
     >
-      <h1>{title}</h1>
+      <h2>{title}</h2>
       <div>{children}</div>
     </div>
   );

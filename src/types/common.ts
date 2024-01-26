@@ -192,3 +192,39 @@ export interface IPaymentMethod {
     method_name: string;
     method_code: string;
 }
+
+
+type IAddress = {
+    phone_number_1: string;
+    phone_number_2: string;
+    country: string;
+    state: string;
+    city: string;
+    location: string;
+}
+
+
+
+export interface IOrder {
+    shipping_address: IAddress,
+    billing_address: IAddress,
+    paymentMethodId: string;
+    shippingMethodApiId: string;
+}
+
+interface IName {
+    first_name: string;
+    last_name: string;
+    middle_name: string;
+}
+
+export interface ICustomer {
+    uid: string;
+    country: string;
+    name: IName,
+    gender: null | string;
+    date_of_birth: null | string;
+    contact_no: null | string;
+    profile_image: null | string;
+    address_Id: null | string;
+}

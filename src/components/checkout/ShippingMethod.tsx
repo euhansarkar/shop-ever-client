@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import FormRadioField from "../Forms/FormRadioField";
-import { dummyShippingMethodOptions } from "@/constants/global";
+import FormRadioStateField from "../Forms/FormRadioStateGroup";
 import { useShippingMethodsQuery } from "@/redux/api/shippingMethodApi";
 import { useDebounced } from "@/redux/hook";
 
@@ -32,11 +31,9 @@ const ShippingMethod = () => {
 
   const shippingMethodOptions = data?.shippingMethods?.map((method) => ({
     label: method?.method_name,
-    value: method?.method_code,
+    value: method?.id,
     cost: method?.cost,
   }));
-
-  console.log(`new`, shippingMethodOptions);
 
   const [isRequiredType, setIsRequiredType] = useState<string | undefined>(
     undefined
@@ -65,12 +62,11 @@ const ShippingMethod = () => {
             <div style={{ margin: "10px 0px" }}>
               {shippingMethodOptions !== undefined &&
                 shippingMethodOptions?.length > 0 && (
-                  <FormRadioField
+                  <FormRadioStateField
                     size="large"
-                    name="shippingMethod.name"
+                    name="shippingMethodId"
                     options={shippingMethodOptions}
                     label=""
-                    onValueChange={(value) => setIsRequiredType(value)}
                   />
                 )}
             </div>

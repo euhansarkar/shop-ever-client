@@ -7,7 +7,7 @@ import FormTextArea from "../Forms/FormTextArea";
 import FormSelectCountryField from "../csc/FormSelectCountryField";
 import { useAppSelector } from "@/redux/hook";
 
-const ShippingAddrss = () => {
+const ShippingAddresses = () => {
   const stepData = useAppSelector((state) => state.checkout);
 
   // get countries
@@ -20,10 +20,10 @@ const ShippingAddrss = () => {
   // get states
   const states =
     //@ts-ignore
-    stepData?.shippingAddr?.country &&
+    stepData?.shipping_address?.country &&
     State.getAllStates()?.filter(
       //@ts-ignore
-      (e) => e.countryCode === stepData?.shippingAddr?.country
+      (e) => e.countryCode === stepData?.shipping_address?.country
     );
   const myStateOptions =
     states?.length! > 0 &&
@@ -35,13 +35,13 @@ const ShippingAddrss = () => {
   // get cities
   const cities =
     //@ts-ignore
-    stepData?.shippingAddr?.state &&
+    stepData?.shipping_address?.state &&
     City.getAllCities()?.filter(
       (e) =>
         //@ts-ignore
-        e.countryCode === stepData?.shippingAddr?.country &&
+        e.countryCode === stepData?.shipping_address?.country &&
         //@ts-ignore
-        e.stateCode === stepData?.shippingAddr?.state
+        e.stateCode === stepData?.shipping_address?.state
     );
   const myCityOptions =
     cities?.length! > 0 &&
@@ -73,7 +73,7 @@ const ShippingAddrss = () => {
             <div style={{ margin: "10px 0px" }}>
               <FormInput
                 type="text"
-                name="shippingAddr.name"
+                name="shipping_address.name"
                 size="large"
                 label="Full Name"
               />
@@ -89,7 +89,7 @@ const ShippingAddrss = () => {
               <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
                 <FormInput
                   type="text"
-                  name="shippingAddr.phone_number_1"
+                  name="shipping_address.phone_number_1"
                   size="large"
                   label="Mobile Number"
                 />
@@ -97,7 +97,7 @@ const ShippingAddrss = () => {
               <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
                 <FormInput
                   type="text"
-                  name="shippingAddr.phone_number_2"
+                  name="shipping_address.phone_number_2"
                   size="large"
                   label="Alternative Mobile Number"
                 />
@@ -115,7 +115,7 @@ const ShippingAddrss = () => {
               <div style={{ margin: `10px 0px`, flexBasis: "50%" }}>
                 <FormSelectCountryField
                   size="large"
-                  name="shippingAddr.country"
+                  name="shipping_address.country"
                   options={countriesOptions}
                   label="Country"
                   placeholder="Select Country"
@@ -124,7 +124,7 @@ const ShippingAddrss = () => {
               <div style={{ margin: "10px 0px", flexBasis: "50%" }}>
                 <FormSelectField
                   size="large"
-                  name="shippingAddr.state"
+                  name="shipping_address.state"
                   options={myStateOptions}
                   label="State"
                   placeholder="Select State"
@@ -143,7 +143,7 @@ const ShippingAddrss = () => {
               <div style={{ margin: `10px 0px`, flexBasis: "50%" }}>
                 <FormSelectField
                   size="large"
-                  name="shippingAddr.city"
+                  name="shipping_address.city"
                   options={myCityOptions}
                   label="City"
                   placeholder="Select City"
@@ -153,7 +153,7 @@ const ShippingAddrss = () => {
 
             <div style={{ margin: "10px 0px" }}>
               <FormTextArea
-                name="shippingAddr.location"
+                name="shipping_address.location"
                 rows={5}
                 placeholder="your location"
                 label="Location"
@@ -166,4 +166,4 @@ const ShippingAddrss = () => {
   );
 };
 
-export default ShippingAddrss;
+export default ShippingAddresses;
