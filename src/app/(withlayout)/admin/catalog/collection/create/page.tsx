@@ -4,7 +4,6 @@ import FormInput from "@/components/Forms/FormInput";
 import FormInputNumber from "@/components/Forms/FormInputNumber";
 import FormRadioField from "@/components/Forms/FormRadioField";
 import FormSelectField from "@/components/Forms/FormSelectField";
-import RichTextEditor from "@/components/editor/RichTextEditor";
 import ActionBar from "@/components/ui/ActionBar";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
 import SEUpload from "@/components/ui/SEUpload";
@@ -12,6 +11,11 @@ import { filterableOptions } from "@/constants/global";
 import { useAddAttributeMutation } from "@/redux/api/attributeApi";
 import { useAttributeGroupsQuery } from "@/redux/api/attributeGroupApi";
 import { Button, Col, Row, Space, message } from "antd";
+import dynamic from "next/dynamic";
+const RichTextEditor = dynamic(
+  () => import("@/components/editor/RichTextEditor"),
+  { ssr: false }
+);
 
 const AttributeCreationPage = () => {
   const [addAttribute] = useAddAttributeMutation();

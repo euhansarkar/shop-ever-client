@@ -9,6 +9,7 @@ import FormDynamicInputField from "@/components/ui/FormDynamicInputField";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
 import { filterableOptions, myOptions } from "@/constants/global";
 import { useAttributeGroupQuery } from "@/redux/api/attributeGroupApi";
+import { IAttribute } from "@/types";
 import { Button, Col, Row, Space, message } from "antd";
 import { useState } from "react";
 
@@ -85,7 +86,7 @@ const PromoCreationPage = () => {
                   General
                 </p>
                 <div>
-                  {attributes?.map((attribute) => {
+                  {attributes?.map((attribute: IAttribute) => {
                     const attributeGroups = attribute?.attribute_options;
                     const attributeGroupOptions = attributeGroups?.map(
                       (group) => ({

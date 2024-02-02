@@ -27,7 +27,7 @@ const ShippingAddresses = () => {
     );
   const myStateOptions =
     states?.length! > 0 &&
-    states?.map((c) => ({
+    states?.map((c: any) => ({
       label: c?.name,
       value: c?.isoCode,
     }));
@@ -45,7 +45,7 @@ const ShippingAddresses = () => {
     );
   const myCityOptions =
     cities?.length! > 0 &&
-    cities?.map((c) => ({
+    cities?.map((c: any) => ({
       label: c?.name,
       value: c?.name,
     }));

@@ -50,9 +50,15 @@ const cartSlice = createSlice({
             state.total -= action.payload.price;
             saveCartToCookies(state);
         },
+
+        resetCart: (state) => {
+            state.products = [];
+            state.total = 0;
+            saveCartToCookies(state);
+        },
     },
 });
 
-export const { addToCart, removeFromCart, removeOne } = cartSlice.actions;
+export const { addToCart, removeFromCart, removeOne, resetCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

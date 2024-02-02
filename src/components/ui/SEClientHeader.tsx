@@ -60,7 +60,7 @@ const SEClientHeader = () => {
 
   const logOut = () => {
     removeUserInfo(AUTH_KEY);
-    router.push("/login");
+    router.push("/account/login");
   };
 
   const items: MenuProps["items"] = [

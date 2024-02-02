@@ -138,11 +138,22 @@ const AttributeEditionPage = ({ params }: any) => {
                       name="type"
                       options={myOptions}
                       label="Attribute Type"
+                      onValueChange={function (
+                        value: string | undefined
+                      ): void {
+                        throw new Error("Function not implemented.");
+                      }}
                     />
                   </div>
 
                   <div style={{ margin: "10px 0px" }}>
-                    <FormDynamicInputField />
+                    <FormDynamicInputField
+                      name={""}
+                      subName={""}
+                      size={"large"}
+                      placeholder={""}
+                      label={""}
+                    />
                   </div>
                 </div>
               </div>
@@ -195,24 +206,27 @@ const AttributeEditionPage = ({ params }: any) => {
                     size="large"
                     name="is_required"
                     options={filterableOptions}
-                    label="Is Required?"
-                  />
+                    label="Is Required?" onValueChange={function (value: string | undefined): void {
+                      throw new Error("Function not implemented.");
+                    } }                  />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
                   <FormRadioField
                     size="large"
                     name="is_filterable"
                     options={filterableOptions}
-                    label="Is Filterable?"
-                  />
+                    label="Is Filterable?" onValueChange={function (value: string | undefined): void {
+                      throw new Error("Function not implemented.");
+                    } }                  />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
                   <FormRadioField
                     size="large"
                     name="display_on_frontend"
                     options={filterableOptions}
-                    label="Show to customers?"
-                  />
+                    label="Show to customers?" onValueChange={function (value: string | undefined): void {
+                      throw new Error("Function not implemented.");
+                    } }                  />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
                   <FormInputNumber

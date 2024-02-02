@@ -4,7 +4,6 @@ import FormInput from "@/components/Forms/FormInput";
 import FormInputNumber from "@/components/Forms/FormInputNumber";
 import FormRadioField from "@/components/Forms/FormRadioField";
 import FormSelectField from "@/components/Forms/FormSelectField";
-import RichTextEditor from "@/components/editor/RichTextEditor";
 import ActionBar from "@/components/ui/ActionBar";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
 import SEUpload from "@/components/ui/SEUpload";
@@ -13,6 +12,11 @@ import { useAddCategoryMutation } from "@/redux/api/categoryApi";
 import { Button, Col, Row, Space, message } from "antd";
 import { useState } from "react";
 import FormDynamicInputField from "@/components/ui/FormDynamicInputField";
+import dynamic from "next/dynamic";
+const RichTextEditor = dynamic(
+  () => import("@/components/editor/RichTextEditor"),
+  { ssr: false }
+);
 
 const CategoryCreationPage = () => {
   const [isRequired, setIsRequired] = useState<string | undefined>(undefined);
@@ -22,7 +26,6 @@ const CategoryCreationPage = () => {
   const [addCategory] = useAddCategoryMutation();
 
   const handleOnSubmit = async (values: any) => {
-    
     const obj = { ...values };
     const file = obj["file"];
     delete obj["file"];

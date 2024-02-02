@@ -31,7 +31,6 @@ const FormDynamicFields = ({
     setValue(name, currentOptions);
   };
 
-
   return (
     <>
       <div>
@@ -60,8 +59,9 @@ const FormDynamicFields = ({
                   name={`${name}.${index}.${subName}`}
                   size={size}
                   placeholder={`${placeholder}: ${index}`}
+                  label={""}
                 />
-                
+
                 <Button
                   type="primary"
                   onClick={() => remove(index)}

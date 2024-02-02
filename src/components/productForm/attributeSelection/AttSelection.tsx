@@ -35,13 +35,14 @@ const FormDynamicFields = ({
     setValue(name, currentOptions);
   };
 
-  fields = fields?.filter((field) => field?.attribute_group_id === id);
+  fields = fields?.filter(
+    (field: any) => field?.attribute_group_id === id
+  );
 
-  const attributeOptions = fields?.map((group) => ({
+  const attributeOptions = fields?.map((group: any) => ({
     label: group?.attribute_name,
     value: group?.id,
   }));
-
 
   console.log(`this data is from att selection`, fields);
 

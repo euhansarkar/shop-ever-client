@@ -46,16 +46,18 @@ const ProductSetting = () => {
                     size="large"
                     name="is_required"
                     options={filterableOptions}
-                    label="Is Required?"
-                  />
+                    label="Is Required?" onValueChange={function (value: string | undefined): void {
+                      throw new Error("Function not implemented.");
+                    } }                  />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
                   <FormRadioField
                     size="large"
                     name="is_required"
                     options={filterableOptions}
-                    label="Is Required?"
-                  />
+                    label="Is Required?" onValueChange={function (value: string | undefined): void {
+                      throw new Error("Function not implemented.");
+                    } }                  />
                 </div>
                 <div style={{ margin: "10px 0px" }}>
                   <FormInput
@@ -96,16 +98,18 @@ const ProductSetting = () => {
                 size="large"
                 name="is_required"
                 options={filterableOptions}
-                label="Is Required?"
-              />
+                label="Is Required?" onValueChange={function (value: string | undefined): void {
+                  throw new Error("Function not implemented.");
+                } }              />
             </div>
             <div style={{ margin: "10px 0px" }}>
               <FormRadioField
                 size="large"
                 name="is_required"
                 options={filterableOptions}
-                label="Is Required?"
-              />
+                label="Is Required?" onValueChange={function (value: string | undefined): void {
+                  throw new Error("Function not implemented.");
+                } }              />
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ import Meta from "antd/es/card/Meta";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import FloatingButton from "../ui/FloatingButton";
 
 const CategoryPage = () => {
   const query: Record<string, any> = {};
@@ -61,6 +62,7 @@ const CategoryPage = () => {
           </Col>
         ))}
       </Row>
+      <FloatingButton />
     </div>
   );
 };

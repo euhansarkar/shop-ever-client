@@ -13,8 +13,6 @@ const ProductPage = ({ params }: any) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const des =
-    "<h2>hello world</h2><p>lorem ipsum doler sit amet what are you doing there</p>";
 
   // get product
   const { data: productData, isLoading: productLoading } =

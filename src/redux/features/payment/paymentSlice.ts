@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface PaymentState {
     clientSecret: string;
     stripeCardError: string;
-}
+} 
 
 const initialState: PaymentState = {
     clientSecret: "",

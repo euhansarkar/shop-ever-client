@@ -13,7 +13,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!userLoggedIn) {
-      router.push(`/login`);
+      router.push(`/account/login`);
     }
     setLoading(true);
   }, [router, userLoggedIn]);

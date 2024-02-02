@@ -114,6 +114,43 @@ const CheckOutPage = () => {
           </div>
         </Col>
 
+        [
+        {
+            "product_id": "your_product_id_here",
+            "a": 2,
+            "ks": "skd"
+            "varients": [
+                {
+                    "attribute_id": "85a9fc3d-9ddd-4f94-aa3b-d9a18c75ef91",
+                    "attribute_name": "color",
+                    "option_id": "449a2a1b-690d-478a-8f9b-cd2f3c7ad1fd",
+                    "varient_id": "28720336-0240-4234-b0a6-5e95bfb0c897",
+                    "option": { 
+                      "k":"sd",
+                      "f": 4,
+                      "p": 2
+                    }
+                }
+            ]
+        },
+        {
+            "product_id": "your_product_id_here-2",
+            "varients": [
+                {
+                    "attribute_id": "85a9fc3d-9ddsfd-4f94-aa3b-d9a18c75ef91",
+                    "attribute_name": "size",
+                    "option_id": "449a2a1b-690sfd-478sfa-8f9b-cd2f3c7ad1fd",
+                    "varient_id": "28720336-0sf240-4234-b0a6-5e95bfb0c897"
+                    "option": {
+                      "a": 1,
+                      "b": 2,
+                      "c": 3
+                    }
+                }
+            ]
+        }
+    ]
+
         {/* second col */}
         <Col span={12} style={{ margin: "10px 0" }}>
           <CartItem />
@@ -126,3 +163,6 @@ const CheckOutPage = () => {
 };
 
 export default dynamic(() => Promise.resolve(CheckOutPage), { ssr: false });
+
+
+

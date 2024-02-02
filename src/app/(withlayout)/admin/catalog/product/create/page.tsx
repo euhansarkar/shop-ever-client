@@ -9,11 +9,15 @@ import { filterableOptions } from "@/constants/global";
 import { Button, Col, Row, Select, Space, message } from "antd";
 import { Option } from "antd/es/mentions";
 import { useState } from "react";
-import RichTextEditor from "@/components/editor/RichTextEditor";
 import { useCategoriesQuery } from "@/redux/api/categoryApi";
 import { useAttributeGroupsQuery } from "@/redux/api/attributeGroupApi";
 import { useAddProductMutation } from "@/redux/api/productApi";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+const RichTextEditor = dynamic(
+  () => import("@/components/editor/RichTextEditor"),
+  { ssr: false }
+);
 
 const ProductCreationPage = () => {
   const router = useRouter();
@@ -276,4 +280,6 @@ const ProductCreationPage = () => {
   );
 };
 
-export default ProductCreationPage;
+export default dynamic(() => Promise.resolve(ProductCreationPage), {
+  ssr: false,
+});

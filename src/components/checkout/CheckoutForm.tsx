@@ -19,7 +19,7 @@ const CheckoutForm = (price: { price: number }) => {
     if (clientSecret === null || clientSecret === "") {
       const createPaymentIntent = async () => {
         try {
-          const response = await paymentIntent(price);
+          const response = await paymentIntent(price) as any;
           console.log(response);
           dispatch(setClientSecret(response?.data));
         } catch (error) {

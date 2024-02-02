@@ -1,25 +1,18 @@
 import { Divider } from "antd";
-import CheckoutCart from "@/components/cart/CheckoutCart";
-import { useAppSelector } from "@/redux/hook";
 import { useShippingMethodsQuery } from "@/redux/api/shippingMethodApi";
+import { useOrderQuery } from "@/redux/api/orderApi";
 
-const CartItem = () => {
-  const stepData = useAppSelector((state) => state.checkout);
-  const { products, total } = useAppSelector((state) => state.cart);
-  console.log(`this is products`, products);
+const SuccessCartItem = ({ id }: { id: string }) => {
+  //   const stepData = useAppSelector((state) => state.checkout);
+  //   const { products, total } = useAppSelector((state) => state.cart);
+  //   console.log(`this is products`, products);
+
+  const { data: orderData, isLoading: orderLoading } = useOrderQuery(id);
+
+  console.log(`orderData`, orderData);
+
   const { data, isLoading } = useShippingMethodsQuery({});
   let getShippingMethod: any = {};
-
-  if (
-    //@ts-ignore
-    stepData?.shippingMethod?.name
-  ) {
-    //@ts-ignore
-    getShippingMethod = data?.shippingMethods?.find(
-      //@ts-ignore
-      (method) => method?.value === stepData?.shippingMethod?.name
-    );
-  }
 
   return (
     <div
@@ -40,7 +33,7 @@ const CartItem = () => {
         >
           Products
         </p>
-        <CheckoutCart products={products} />
+        {/* <CheckoutCart products={products} /> */}
         <div style={{ paddingLeft: "10px", paddingRight: "20px" }}>
           <div
             style={{
@@ -51,7 +44,7 @@ const CartItem = () => {
             }}
           >
             <span>sub total</span>
-            <span>{total ? total : 0}</span>
+            {/* <span>{total ? total : 0}</span> */}
           </div>
 
           <div
@@ -63,9 +56,9 @@ const CartItem = () => {
             }}
           >
             <span>Discount</span>
-            <span>{total ? 0 : 0}</span>
+            {/* <span>{total ? 0 : 0}</span> */}
           </div>
-
+          {/* 
           {
             //@ts-ignore
             stepData?.shippingMethod?.name && (
@@ -81,7 +74,7 @@ const CartItem = () => {
                 <span>{getShippingMethod?.cost}</span>
               </div>
             )
-          }
+          } */}
 
           <Divider />
           <div
@@ -93,7 +86,7 @@ const CartItem = () => {
             }}
           >
             <span>total</span>
-            <span>{total ? total : 0}</span>
+            {/* <span>{total ? total : 0}</span> */}
           </div>
         </div>
       </div>
@@ -101,4 +94,4 @@ const CartItem = () => {
   );
 };
 
-export default CartItem;
+export default SuccessCartItem;

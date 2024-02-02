@@ -8,6 +8,7 @@ import StepperForm from "@/components/stepper/FormStepper";
 import SEBreadCrumb from "@/components/ui/SEBreadCrumb";
 import { CHECKOUT_STEPPER_PERSIST_KEY } from "@/constants/storageKey";
 import { useAddOrderMutation } from "@/redux/api/orderApi";
+import { resetCart } from "@/redux/features/cart/cartSlice";
 import { resetCheckoutData } from "@/redux/features/checkout/checkoutSlice";
 import { setStripeCardError } from "@/redux/features/payment/paymentSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
@@ -109,8 +110,27 @@ const CheckOutPage = () => {
     // formData.append("data", data);
     // message.loading("Creating...");
     try {
-      console.log(`pre add`, values);
-      const res = await addOrder(values).unwrap();
+      const productsData: any = JSON.parse(JSON.stringify(products));
+
+      console.log(`this is stringified`, productsData);
+
+      const newProducts = productsData?.map((product: any) => {
+        const myProduct = {
+          product_id: product?.id,
+          varients: Object.values(product?.varients).map((varient: any) => ({
+            attribute_id: varient?.id,
+            attribute_name: varient?.attribute_name,
+            option_id: varient?.option_id,
+            varient_id: varient?.varient_id,
+          })),
+        };
+        return myProduct;
+      });
+
+      console.log(`get new products array`, newProducts);
+
+      const data = { ...values, products: newProducts };
+      const res = await addOrder(data).unwrap();
       if (!!res?.id) {
         console.log(`this is order response`, res);
         message.success("Order created successfully!");

@@ -69,7 +69,6 @@ const CategoriesPage = ({ params }: any) => {
       key: `sub${key}`,
       icon: React.createElement(icon),
       label: `subnav ${key}`,
-
       children: new Array(4).fill(null).map((_, j) => {
         const subKey = index * 4 + j + 1;
         return {

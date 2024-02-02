@@ -1,4 +1,4 @@
-import { IMeta, IProduct, IVarient } from "@/types";
+import { IMeta, IProduct, IVariant } from "@/types";
 import { baseApi } from "./baseApi";
 import { tagTypes } from '../tag-types';
 import { crudTypes } from "../crud-types";
@@ -16,7 +16,7 @@ export const varientApi = baseApi.injectEndpoints({
                     params: arg,
                 };
             },
-            transformResponse: (response: IVarient[], meta: IMeta) => {
+            transformResponse: (response: IVariant[], meta: IMeta) => {
                 return {
                     varients: response,
                     meta,
